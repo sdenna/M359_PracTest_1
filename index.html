@@ -1066,14 +1066,22 @@ function selectMode(m) {
 function getActiveQuestions() { return state.activeQuestions; }
 
 function startExam() {
+  // Build fresh question set first
   state.activeQuestions = state.mode === 'chunked' ? buildChunk() : buildQuestionBank();
+  // Completely reset all exam state — guaranteed clean slate
   state.startTime = Date.now();
   state.timeLeft  = 90 * 60;
   state.current   = 0;
   state.answers   = {};
   state.flagged   = new Set();
+  state.crossed   = {};
   state.submitted = false;
   state.reviewingFromList = false;
+  // Clear any lingering DOM content from a previous attempt
+  const fb = document.getElementById('feedback-box');
+  const ex = document.getElementById('explanation-box');
+  if (fb) { fb.style.display = 'none'; fb.textContent = ''; }
+  if (ex) { ex.style.display = 'none'; ex.innerHTML = ''; }
 
   // Timer: only shown for 42-question mode
   const timerEl = document.getElementById('timer-display');
@@ -1390,9 +1398,22 @@ function openQuestionFromReview(idx) {
 
 function resetExam() {
   clearInterval(state.timerInterval);
-  state = { mode: state.mode, current: 0, answers: {}, flagged: new Set(),
+  // Fully wipe state — no stale answers, submissions, or crossed-out choices
+  state = {
+    mode: state.mode, current: 0, answers: {}, flagged: new Set(), crossed: {},
     submitted: false, startTime: null, timerInterval: null,
-    timeLeft: 90*60, reviewingFromList: false, activeQuestions: [] };
+    timeLeft: 90*60, reviewingFromList: false, activeQuestions: []
+  };
+  // Explicitly clear all exam DOM so nothing bleeds through from previous attempt
+  const fb = document.getElementById('feedback-box');
+  const ex = document.getElementById('explanation-box');
+  const opts = document.getElementById('options-container');
+  if (fb)   { fb.style.display = 'none'; fb.textContent = ''; }
+  if (ex)   { ex.style.display = 'none'; ex.innerHTML = ''; }
+  if (opts) { opts.innerHTML = ''; }
+  // Reset the next button to a neutral state
+  const nb = document.getElementById('next-btn');
+  if (nb)   { nb.textContent = 'Next →'; nb.onclick = null; }
   show('start-screen');
 }
 
