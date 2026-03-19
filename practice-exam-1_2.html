@@ -27,8 +27,8 @@
   .btn-flag:hover { background: #fde9c4; }
   .btn-flagged { background: #f0a830; color: #3d2105; border-color: #d4881a; }
   .btn-flagged:hover { background: #d4881a; }
-  .btn-danger { background: #fff; color: #a32d2d; border-color: #e0a0a0; }
-  .btn-danger:hover { background: #fdf0f0; }
+  .btn-export { background: #f0f5ff; color: #1a5fa8; border-color: #b0c8e8; }
+  .btn-export:hover { background: #deeaf8; }
   .card { background: #fff; border: 1px solid #e0e0dc; border-radius: 12px; padding: 1.25rem; }
   .card-mode { cursor: pointer; transition: border-color 0.15s; margin-bottom: 10px; }
   .card-mode:hover { border-color: #1a5fa8; }
@@ -64,7 +64,7 @@
   .feedback-correct { background: #e8f4e8; color: #1a5a1a; border: 1px solid #a8d8a8; }
   .feedback-wrong { background: #fde8e8; color: #7a1a1a; border: 1px solid #e8a8a8; }
   .explanation-box { margin-top: 1rem; padding: 14px 16px; border-radius: 8px; font-size: 14px; line-height: 1.7; background: #f0f5ff; border-left: 3px solid #1a5fa8; color: #1a1a1a; }
-  .explanation-box strong { font-weight: 600; display: block; margin-top: 8px; margin-bottom: 6px; color: #0c407a; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .explanation-box strong { font-weight: 600; display: block; margin-bottom: 6px; color: #0c407a; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
   .nav-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
   .nav-dots-section { margin-top: 1.5rem; }
   .nav-dots-label { font-size: 12px; color: #888; margin-bottom: 6px; }
@@ -74,7 +74,6 @@
   .dot.current { border-color: #1a5fa8; color: #1a5fa8; font-weight: 700; }
   .dot.answered { background: #1a5fa8; color: #fff; border-color: #1a5fa8; }
   .dot.flagged { background: #f0a830; color: #3d2105; border-color: #d4881a; }
-  .submit-row { margin-top: 1rem; text-align: center; }
   .result-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e8e8e5; gap: 8px; }
   .result-row:last-child { border-bottom: none; }
   .result-topic { flex: 1; font-size: 13px; }
@@ -87,6 +86,9 @@
   .rec-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 0.5rem; }
   .rec-box p { font-size: 14px; color: #444; line-height: 1.7; }
   .action-row { margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap; }
+  .export-row { margin-top: 1rem; padding: 1rem; background: #f8fbff; border: 1px solid #c8dcf0; border-radius: 10px; }
+  .export-row p { font-size: 13px; color: #555; margin-bottom: 0.6rem; font-weight: 600; }
+  .export-btns { display: flex; gap: 8px; flex-wrap: wrap; }
   .review-item { background: #fff; border: 1px solid #e0e0dc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
   .review-item:hover { border-color: #1a5fa8; background: #f8fbff; }
   .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
@@ -101,6 +103,15 @@
   .legend-item { display: flex; align-items: center; gap: 5px; }
   .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
   @media (max-width: 500px) { .screen { padding: 1.25rem 1rem; } h1 { font-size: 22px; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+
+  .opt-crossout-btn { margin-left: auto; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid #ccc; background: #fff; color: #999; font-size: 11px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s, border-color 0.15s; line-height: 1; }
+  .opt-crossout-btn:hover { background: #fde8e8; color: #a32d2d; border-color: #e0a0a0; }
+  .opt.crossed-out { opacity: 0.38; }
+  .opt.crossed-out .opt-text { text-decoration: line-through; }
+  .opt.crossed-out .opt-crossout-btn { background: #fde8e8; color: #a32d2d; border-color: #e0a0a0; }
 </style>
 </head>
 <body>
@@ -109,31 +120,40 @@
   <div class="container-sm">
     <p class="eyebrow">AP Computer Science A</p>
     <h1>Practice Exam #1</h1>
-    <p class="subtitle">Questions are randomly generated each session — numbers, values, and variants change every time so you get fresh practice. You may flag questions to revisit before submitting.</p>
+    <p class="subtitle">Questions are AP exam-weighted: ~21% Objects &amp; Methods · ~31% Selection &amp; Iteration · ~14% Class Creation · ~33% Data Collections. Values and variants change every session.</p>
     <div class="metrics">
       <div class="metric"><div class="metric-val">42+</div><div class="metric-lbl">Question pool</div></div>
-      <div class="metric"><div class="metric-val">90 min</div><div class="metric-lbl">Time limit</div></div>
-      <div class="metric"><div class="metric-val">13</div><div class="metric-lbl">Topics</div></div>
+      <div class="metric"><div class="metric-val">90 min</div><div class="metric-lbl">Full exam timer</div></div>
+      <div class="metric"><div class="metric-val">4</div><div class="metric-lbl">AP Units</div></div>
     </div>
     <p style="font-size:14px;font-weight:600;margin-bottom:0.75rem">How would you like to take the test?</p>
     <div class="card card-mode selected" id="mode-all" onclick="selectMode('all')">
       <div class="card-mode-title">All 42 questions</div>
-      <div class="card-mode-desc">Full AP-style exam, one question at a time with 90-minute timer</div>
+      <div class="card-mode-desc">Full AP-style exam with 90-minute countdown timer</div>
     </div>
     <div class="card card-mode" id="mode-10" onclick="selectMode('chunked')">
       <div class="card-mode-title">10 questions at a time</div>
-      <div class="card-mode-desc">Randomly sampled each session — you'll see different questions every time</div>
+      <div class="card-mode-desc">Untimed practice — proportionally weighted, different questions every session</div>
     </div>
     <div style="margin-top:1.5rem">
       <button class="btn btn-primary btn-block" onclick="startExam()">Start exam</button>
     </div>
+    <div style="margin-top:1rem;padding:1rem;background:#f8fbff;border:1px solid #c8dcf0;border-radius:10px;">
+      <p style="font-size:13px;font-weight:600;color:#444;margin-bottom:0.5rem;">&#128196; Export a question set as PDF</p>
+      <p style="font-size:12px;color:#777;margin-bottom:0.75rem;">Generates a fresh set based on your selected mode above, without starting the timed exam.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-sm btn-export" onclick="exportFromStart('both')">Questions + Answer Key</button>
+        <button class="btn btn-sm btn-export" onclick="exportFromStart('key')">Answer Key only</button>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- ── EXAM SCREEN ──────────────────────────────────────────────────────── -->
 <div id="exam-screen" class="screen">
   <div class="container">
     <div class="top-bar">
-      <span class="q-counter" id="q-counter">Question 1 of 42</span>
+      <span class="q-counter" id="q-counter">Question 1</span>
       <span class="timer" id="timer-display">90:00</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
@@ -163,12 +183,13 @@
         <div class="legend-item"><div class="legend-dot" style="background:#e0e0dc;border:1px solid #ccc"></div> Unanswered</div>
       </div>
     </div>
-    <div class="submit-row" id="submit-row">
-      <button class="btn btn-sm btn-danger" onclick="confirmSubmit()">Submit exam</button>
+    <div id="submit-anytime-row" style="margin-top:1.25rem;text-align:center;">
+      <button class="btn btn-sm" style="color:#a32d2d;border-color:#e0a0a0;" onclick="confirmSubmit()">&#9654; Submit exam early</button>
     </div>
   </div>
 </div>
 
+<!-- ── RESULTS SCREEN ───────────────────────────────────────────────────── -->
 <div id="results-screen" class="screen">
   <div class="container">
     <p class="eyebrow">Results</p>
@@ -176,11 +197,18 @@
     <div class="metrics">
       <div class="metric"><div class="metric-val" id="res-score">--</div><div class="metric-lbl">Score</div></div>
       <div class="metric"><div class="metric-val" id="res-correct">--</div><div class="metric-lbl">Correct</div></div>
-      <div class="metric"><div class="metric-val" id="res-time">--</div><div class="metric-lbl">Time used</div></div>
+      <div class="metric" id="res-time-metric"><div class="metric-val" id="res-time">--</div><div class="metric-lbl">Time used</div></div>
     </div>
     <h3>Performance by topic</h3>
     <div id="topic-results"></div>
     <div class="rec-box"><h3>Study recommendation</h3><p id="recommendation"></p></div>
+    <div class="export-row">
+      <p>&#128196; Export this question set as PDF</p>
+      <div class="export-btns">
+        <button class="btn btn-sm btn-export" onclick="exportPDF('both')">Questions + Answer Key</button>
+        <button class="btn btn-sm btn-export" onclick="exportPDF('key')">Answer Key only</button>
+      </div>
+    </div>
     <div class="action-row">
       <button class="btn btn-primary btn-sm" onclick="goToReview()">Review answers</button>
       <button class="btn btn-sm" onclick="resetExam()">Take again</button>
@@ -188,6 +216,7 @@
   </div>
 </div>
 
+<!-- ── REVIEW SCREEN ────────────────────────────────────────────────────── -->
 <div id="review-screen" class="screen">
   <div class="container">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.75rem">
@@ -201,32 +230,10 @@
 
 <script>
 const LETTERS = ['A','B','C','D'];
-
-// ─── UTILITIES ───────────────────────────────────────────────────────────────
-function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [a[i],a[j]]=[a[j],a[i]]; }
-  return a;
-}
-// Guarantee exactly 4 unique options. correct = the right answer string.
-// candidates = pool of strings; fallbacks = extra strings used if pool has duplicates.
-function make4(correct, candidates, fallbacks) {
-  const seen = new Set([correct]);
-  const out = [correct];
-  for (const c of [...candidates, ...(fallbacks||[])]) {
-    if (out.length === 4) break;
-    if (!seen.has(c)) { seen.add(c); out.push(c); }
-  }
-  const shuffled = shuffle(out);
-  return { options: shuffled, answer: shuffled.indexOf(correct) };
-}
-
-// ─── QUESTION GENERATORS ─────────────────────────────────────────────────────
-// Each generator returns a fully-formed question object.
-// "Parameterized" = numbers/values change randomly.
-// "Variant" = structurally different problem each call.
+function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function make4(correct,candidates,fallbacks){const seen=new Set([correct]);const out=[correct];for(const c of[...(candidates||[]),...(fallbacks||[])]){if(out.length===4)break;if(!seen.has(c)){seen.add(c);out.push(c);}}const s=shuffle(out);return{options:s,answer:s.indexOf(correct)};}
 
 const GENERATORS = [
 
@@ -673,8 +680,8 @@ const GENERATORS = [
       [`{${Array(size).fill(0).join(", ")}}`]);
     return {
       topic:"4.3: Array Creation and Access", skill:"Determine result of array operations",
-      text:`What does numArr contain after the code executes? (updateArr sets numArr[index] = val)`,
-      code:`int[] numArr = new int[${size}];\nupdateArr(numArr, ${idx1}, ${val1});\nupdateArr(numArr, ${idx2}, ${val2});`,
+      text:`What does numArr contain after the code executes?`,
+      code:`// Method signature: updateArr(int[] arr, int index, int val)\n// Sets arr[index] = val\nint[] numArr = new int[${size}];\nupdateArr(numArr, ${idx1}, ${val1});\nupdateArr(numArr, ${idx2}, ${val2});`,
       optIsCode:[true,true,true,true], options, answer,
       explanation:`new int[${size}] initializes all to 0. updateArr sets index ${idx1} to ${val1}, then index ${idx2} to ${val2}. Final: ${correct}.`
     };
@@ -861,10 +868,10 @@ const GENERATORS = [
   // Q35 — ArrayList algorithm (fixed)
   () => ({
     topic:"4.10: Implementing ArrayList Algorithms", skill:"Describe the behavior of an ArrayList algorithm",
-    text:"A method sets prev = Integer.MAX_VALUE, traverses an ArrayList, returns false if any element > prev, otherwise returns true. What does this determine?",
-    code:null, optIsCode:[false,false,false,false],
+    text:"What does the following method determine about an ArrayList of integers?",
+    code:"public static boolean checkOrder(ArrayList<Integer> list) {\n  int prev = list.get(0);\n  for (int i = 1; i < list.size(); i++) {\n    if (list.get(i) > prev) { return false; }\n    prev = list.get(i);\n  }\n  return true;\n}", optIsCode:[false,false,false,false],
     options:["Whether the list is sorted least to greatest","Whether the list has duplicate values","Whether all values are positive","Whether the list is sorted greatest to least"],
-    answer:3, explanation:"prev starts at MAX_VALUE. If any element exceeds prev (went up), the sequence is not descending → return false. Surviving the full traversal means it's always descending → sorted greatest to least."
+    answer:3, explanation:"prev tracks the previous element. If the current element is greater than prev, the list went up — not descending — so return false. If the loop completes without returning false, every element was ≤ the one before it, meaning the list is sorted greatest to least."
   }),
 
   // Q36 — 2D array creation (2 variants)
@@ -987,44 +994,61 @@ const GENERATORS = [
 
 ]; // end GENERATORS
 
-// ─── QUESTION BANK BUILDER ───────────────────────────────────────────────────
-// Generates one question per generator (one per topic slot), shuffled for chunk mode
+// ─── UNIT-WEIGHTED QUESTION BANK ─────────────────────────────────────────────
+// AP CSA exam weights: U1=21%, U2=31%, U3=14%, U4=33%
+// Per 42-question exam: U1=9, U2=13, U3=6, U4=14
+// Per 10-question chunk: U1=2, U2=3, U3=2, U4=3 (rounded, topic-diverse)
+
+// Map each generator index to its unit
+const GEN_UNITS = [
+  'U1','U2','U1','U1','U2','U2','U1','U1','U3','U2', // 0-9:  Assign,Bool,Instantiate,Arith,NestedIf,ForBug,StringMeth,Cast,Access,WriteNestIf
+  'U1','U3','U2','U2','U2','U3','U3','U4','U1','U2', // 10-19: CallMethod,WriteMethod,LoopCount,DeMorgan,StringAlgo,ClassDesign,Reliability,ArrayBug,MathRandom,WhileLoop
+  'U2','U3','U4','U4','U3','U2','U1','U2','U2','U4', // 20-29: NestedIter,Scope,ArrayAccess,ArrayListMeth,StaticVar,FixWhile,DataEthics,StringAdj,Recursion,WriteMinMax
+  'U1','U4','U4','U4','U4','U4','U4','U4','U4','U4', // 30-39: SamplingBias,2DTraversal,ArrTraversal,ALTraversal,ALAlgo,2DCreation,2DAlgo,FileParse,BinSearch,InsertSort
+  'U4','U2'                                           // 40-41: StringLenAlgo,EquivLoop
+];
+
+// Unit quotas for full 42-question exam
+const FULL_QUOTAS = { U1: 9, U2: 13, U3: 6, U4: 14 };
+// Unit quotas for 10-question chunk
+const CHUNK_QUOTAS = { U1: 2, U2: 3, U3: 2, U4: 3 };
+
 function buildQuestionBank() {
-  return GENERATORS.map(gen => gen());
+  return buildWeighted(FULL_QUOTAS, 42);
 }
 
-// For chunked mode: pick 10 questions, ensuring no repeats from last session
-let lastChunkTopics = [];
-function buildChunk(bank) {
-  // Shuffle bank, then pick 10 with topic diversity
-  const shuffled = shuffle(bank);
-  const selected = [];
-  const usedTopics = new Set();
-  // First pass: pick questions with unused topics
-  for (const q of shuffled) {
-    if (selected.length >= 10) break;
-    if (!usedTopics.has(q.topic)) { selected.push(q); usedTopics.add(q.topic); }
+function buildChunk() {
+  return buildWeighted(CHUNK_QUOTAS, 10);
+}
+
+function buildWeighted(quotas, total) {
+  // Group generators by unit
+  const pools = { U1: [], U2: [], U3: [], U4: [] };
+  GENERATORS.forEach((gen, i) => pools[GEN_UNITS[i]].push(gen));
+
+  const questions = [];
+  // For each unit, call a shuffled subset of its generators
+  for (const unit of ['U1','U2','U3','U4']) {
+    const pool = shuffle([...pools[unit]]);
+    const count = quotas[unit];
+    for (let i = 0; i < count && i < pool.length; i++) {
+      questions.push(pool[i]());
+    }
+    // If pool smaller than quota, repeat-sample
+    let extra = count - pool.length;
+    while (extra > 0) {
+      questions.push(pick(pools[unit])());
+      extra--;
+    }
   }
-  // Second pass: fill remaining slots
-  for (const q of shuffled) {
-    if (selected.length >= 10) break;
-    if (!selected.includes(q)) selected.push(q);
-  }
-  return selected;
+  return shuffle(questions);
 }
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let state = {
-  mode: 'all',
-  current: 0,
-  answers: {},
-  flagged: new Set(),
-  submitted: false,
-  startTime: null,
-  timerInterval: null,
-  timeLeft: 90 * 60,
-  reviewingFromList: false,
-  activeQuestions: []
+  mode: 'all', current: 0, answers: {}, flagged: new Set(), crossed: {},
+  submitted: false, startTime: null, timerInterval: null,
+  timeLeft: 90 * 60, reviewingFromList: false, activeQuestions: []
 };
 
 function show(id) {
@@ -1036,26 +1060,32 @@ function show(id) {
 function selectMode(m) {
   state.mode = m;
   document.getElementById('mode-all').className = 'card card-mode' + (m === 'all' ? ' selected' : '');
-  document.getElementById('mode-10').className = 'card card-mode' + (m === 'chunked' ? ' selected' : '');
+  document.getElementById('mode-10').className  = 'card card-mode' + (m === 'chunked' ? ' selected' : '');
 }
 
 function getActiveQuestions() { return state.activeQuestions; }
 
 function startExam() {
-  const bank = buildQuestionBank();
-  state.activeQuestions = state.mode === 'chunked' ? buildChunk(bank) : bank;
+  state.activeQuestions = state.mode === 'chunked' ? buildChunk() : buildQuestionBank();
   state.startTime = Date.now();
-  state.timeLeft = 90 * 60;
-  state.current = 0;
-  state.answers = {};
-  state.flagged = new Set();
+  state.timeLeft  = 90 * 60;
+  state.current   = 0;
+  state.answers   = {};
+  state.flagged   = new Set();
   state.submitted = false;
   state.reviewingFromList = false;
+
+  // Timer: only shown for 42-question mode
+  const timerEl = document.getElementById('timer-display');
+  if (state.mode === 'chunked') {
+    timerEl.style.display = 'none';
+    clearInterval(state.timerInterval);
+  } else {
+    timerEl.style.display = '';
+    startTimer();
+  }
+
   show('exam-screen');
-  document.getElementById('nav-dots-section').style.display = '';
-  document.getElementById('submit-row').style.display = '';
-  document.getElementById('back-to-review-row').style.display = 'none';
-  startTimer();
   renderQuestion();
 }
 
@@ -1077,14 +1107,14 @@ function updateTimerDisplay() {
 
 function renderQuestion() {
   const qs = getActiveQuestions();
-  const q = qs[state.current];
+  const q  = qs[state.current];
   const total = qs.length;
 
   document.getElementById('q-counter').textContent = 'Question ' + (state.current + 1) + ' of ' + total;
   document.getElementById('progress-fill').style.width = ((state.current + 1) / total * 100).toFixed(0) + '%';
   document.getElementById('q-topic').textContent = q.topic;
   document.getElementById('q-skill').textContent = q.skill;
-  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-text').textContent  = q.text;
 
   const codeEl = document.getElementById('q-code');
   if (q.code) { codeEl.textContent = q.code; codeEl.style.display = 'block'; }
@@ -1111,7 +1141,23 @@ function renderQuestion() {
     textSpan.textContent = opt;
     div.appendChild(letterSpan);
     div.appendChild(textSpan);
-    if (!state.submitted) div.onclick = () => selectAnswer(i);
+    // Cross-out button (only shown before submission)
+    if (!state.submitted) {
+      div.onclick = () => selectAnswer(i);
+      const xBtn = document.createElement('button');
+      xBtn.className = 'opt-crossout-btn';
+      xBtn.title = 'Eliminate this choice';
+      xBtn.textContent = '\u2715';
+      const qKey = state.current + '-' + i;
+      if (state.crossed[qKey]) div.classList.add('crossed-out');
+      xBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (state.crossed[qKey]) { delete state.crossed[qKey]; div.classList.remove('crossed-out'); }
+        else { state.crossed[qKey] = true; div.classList.add('crossed-out'); }
+        xBtn.blur();
+      };
+      div.appendChild(xBtn);
+    }
     cont.appendChild(div);
   });
 
@@ -1120,11 +1166,11 @@ function renderQuestion() {
     fb.style.display = 'block';
     const ua = state.answers[state.current];
     if (ua !== undefined) {
-      const correct = ua === q.answer;
-      fb.className = 'feedback-box ' + (correct ? 'feedback-correct' : 'feedback-wrong');
-      fb.textContent = correct ? 'Correct! Well done.' : 'Incorrect. The correct answer is ' + LETTERS[q.answer] + '.';
+      const isCorrect = ua === q.answer;
+      fb.className  = 'feedback-box ' + (isCorrect ? 'feedback-correct' : 'feedback-wrong');
+      fb.textContent = isCorrect ? 'Correct! Well done.' : 'Incorrect. The correct answer is ' + LETTERS[q.answer] + '.';
     } else {
-      fb.className = 'feedback-box feedback-wrong';
+      fb.className  = 'feedback-box feedback-wrong';
       fb.textContent = 'Not answered. The correct answer is ' + LETTERS[q.answer] + '.';
     }
   } else { fb.style.display = 'none'; }
@@ -1137,12 +1183,13 @@ function renderQuestion() {
 
   const flagBtn = document.getElementById('flag-btn');
   const isFlagged = state.flagged.has(state.current);
-  flagBtn.className = 'btn btn-sm ' + (isFlagged ? 'btn-flagged' : 'btn-flag');
+  flagBtn.className  = 'btn btn-sm ' + (isFlagged ? 'btn-flagged' : 'btn-flag');
   flagBtn.textContent = isFlagged ? 'Flagged' : 'Flag for review';
   flagBtn.style.display = state.submitted ? 'none' : '';
 
   document.getElementById('prev-btn').disabled = state.current === 0;
 
+  // Single Next/Submit button (blue, in nav-row) — the submit-row below is removed
   const nextBtn = document.getElementById('next-btn');
   if (state.current === qs.length - 1) {
     if (state.submitted) { nextBtn.textContent = 'See results'; nextBtn.onclick = goToResults; }
@@ -1154,13 +1201,15 @@ function renderQuestion() {
 
   if (state.reviewingFromList) {
     document.getElementById('back-to-review-row').style.display = 'block';
-    document.getElementById('nav-dots-section').style.display = 'none';
-    document.getElementById('submit-row').style.display = 'none';
+    document.getElementById('nav-dots-section').style.display   = 'none';
+    const earR = document.getElementById('submit-anytime-row');
+    if (earR) earR.style.display = 'none';
   } else {
     document.getElementById('back-to-review-row').style.display = 'none';
-    document.getElementById('nav-dots-section').style.display = '';
-    document.getElementById('submit-row').style.display = state.submitted ? 'none' : '';
-    renderDots();
+    document.getElementById('nav-dots-section').style.display   = state.submitted ? 'none' : '';
+    const ear = document.getElementById('submit-anytime-row');
+    if (ear) ear.style.display = state.submitted ? 'none' : '';
+    if (!state.submitted) renderDots();
   }
 }
 
@@ -1183,15 +1232,16 @@ function navigate(dir) {
 }
 
 function renderDots() {
-  const qs = getActiveQuestions();
+  const qs   = getActiveQuestions();
   const cont = document.getElementById('nav-dots');
   cont.innerHTML = '';
   qs.forEach((q, i) => {
     const answered = state.answers[i] !== undefined;
-    const flagged = state.flagged.has(i);
+    const flagged  = state.flagged.has(i);
     let cls = 'dot' + (i === state.current ? ' current' : '') + (flagged ? ' flagged' : answered ? ' answered' : '');
     const d = document.createElement('div');
-    d.className = cls; d.textContent = i + 1;
+    d.className   = cls;
+    d.textContent = i + 1;
     d.onclick = () => { state.current = i; renderQuestion(); };
     cont.appendChild(d);
   });
@@ -1199,12 +1249,12 @@ function renderDots() {
 
 function confirmSubmit() {
   const qs = getActiveQuestions();
-  const answered = qs.filter((_, i) => state.answers[i] !== undefined).length;
+  const answered   = qs.filter((_, i) => state.answers[i] !== undefined).length;
   const unanswered = qs.length - answered;
-  const flagged = qs.filter((_, i) => state.flagged.has(i)).length;
+  const flagged    = qs.filter((_, i) => state.flagged.has(i)).length;
   let msg = 'Are you sure you want to submit?';
   if (unanswered > 0) msg += '\n\n' + unanswered + ' question(s) are unanswered.';
-  if (flagged > 0) msg += '\n' + flagged + ' question(s) are flagged for review.';
+  if (flagged > 0)    msg += '\n' + flagged + ' question(s) are flagged for review.';
   if (confirm(msg)) submitExam();
 }
 
@@ -1220,12 +1270,22 @@ function buildResults() {
   const qs = getActiveQuestions();
   let correct = 0;
   qs.forEach((q, i) => { if (state.answers[i] === q.answer) correct++; });
-  const total = qs.length;
-  const pct = Math.round(correct / total * 100);
-  document.getElementById('res-score').textContent = pct + '%';
-  document.getElementById('res-correct').textContent = correct + ' / ' + total;
+  const total   = qs.length;
+  const pct     = Math.round(correct / total * 100);
   const elapsed = Math.round((Date.now() - state.startTime) / 1000);
-  document.getElementById('res-time').textContent = Math.floor(elapsed/60) + 'm ' + (elapsed%60<10?'0':'') + (elapsed%60) + 's';
+
+  document.getElementById('res-score').textContent   = pct + '%';
+  document.getElementById('res-correct').textContent = correct + ' / ' + total;
+
+  // Hide time metric for 10-question (untimed) mode
+  const timeMetric = document.getElementById('res-time-metric');
+  if (state.mode === 'chunked') {
+    timeMetric.style.display = 'none';
+  } else {
+    timeMetric.style.display = '';
+    document.getElementById('res-time').textContent =
+      Math.floor(elapsed/60) + 'm ' + (elapsed%60 < 10 ? '0' : '') + (elapsed%60) + 's';
+  }
 
   const topicMap = {};
   qs.forEach((q, i) => {
@@ -1233,19 +1293,21 @@ function buildResults() {
     topicMap[q.topic].total++;
     if (state.answers[i] === q.answer) topicMap[q.topic].correct++;
   });
-  const sorted = Object.entries(topicMap).sort((a,b) => (a[1].correct/a[1].total)-(b[1].correct/b[1].total));
+  const sorted = Object.entries(topicMap).sort((a,b) => (a[1].correct/a[1].total) - (b[1].correct/b[1].total));
   const tr = document.getElementById('topic-results');
   tr.innerHTML = '';
   sorted.forEach(([topic, data]) => {
-    const p = Math.round(data.correct / data.total * 100);
+    const p       = Math.round(data.correct / data.total * 100);
     const pillCls = p >= 75 ? 'pill-good' : p >= 50 ? 'pill-ok' : 'pill-bad';
-    const label = p >= 75 ? 'Strong' : p >= 50 ? 'Review' : 'Needs work';
-    const row = document.createElement('div');
+    const label   = p >= 75 ? 'Strong'    : p >= 50 ? 'Review'  : 'Needs work';
+    const row     = document.createElement('div');
     row.className = 'result-row';
-    row.innerHTML = '<span class="result-topic">' + topic + '</span><span class="result-count">' + data.correct + '/' + data.total + '</span><span class="pill ' + pillCls + '">' + label + '</span>';
+    row.innerHTML = '<span class="result-topic">' + topic + '</span>'
+      + '<span class="result-count">' + data.correct + '/' + data.total + '</span>'
+      + '<span class="pill ' + pillCls + '">' + label + '</span>';
     tr.appendChild(row);
   });
-  const weak = sorted.filter(([,d]) => d.correct/d.total < 0.5).map(([t]) => t.split(':')[1]?.trim() || t);
+  const weak = sorted.filter(([,d]) => d.correct/d.total < 0.5).map(([t]) => t.split('·')[1]?.trim() || t.split(':')[1]?.trim() || t);
   let rec = pct >= 80
     ? 'Excellent work! Strong grasp of AP CSA concepts. Focus remaining prep on free-response writing and any lingering weak topics.'
     : pct >= 60
@@ -1257,24 +1319,63 @@ function buildResults() {
 function goToResults() { buildResults(); show('results-screen'); }
 
 function goToReview() {
-  const qs = getActiveQuestions();
+  const qs   = getActiveQuestions();
   const list = document.getElementById('review-list');
   list.innerHTML = '';
+
+  // Summary counts banner
+  let nCorrect = 0, nWrong = 0, nBlank = 0;
   qs.forEach((q, i) => {
     const ua = state.answers[i];
-    const correct = ua === q.answer;
+    if (ua === undefined) nBlank++;
+    else if (ua === q.answer) nCorrect++;
+    else nWrong++;
+  });
+  const banner = document.createElement('div');
+  banner.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.25rem;';
+  banner.innerHTML =
+    '<div style="flex:1;min-width:100px;padding:12px;background:#e8f4e8;border:1px solid #a8d8a8;border-radius:10px;text-align:center;">'
+    + '<div style="font-size:22px;font-weight:700;color:#1a5a1a;">' + nCorrect + '</div>'
+    + '<div style="font-size:12px;color:#2d7a2d;margin-top:2px;">&#10003; Correct</div></div>'
+    + '<div style="flex:1;min-width:100px;padding:12px;background:#fde8e8;border:1px solid #e8a8a8;border-radius:10px;text-align:center;">'
+    + '<div style="font-size:22px;font-weight:700;color:#7a1a1a;">' + nWrong + '</div>'
+    + '<div style="font-size:12px;color:#a32d2d;margin-top:2px;">&#10007; Incorrect</div></div>'
+    + '<div style="flex:1;min-width:100px;padding:12px;background:#fef3e2;border:1px solid #f0c060;border-radius:10px;text-align:center;">'
+    + '<div style="font-size:22px;font-weight:700;color:#7a4a0a;">' + nBlank + '</div>'
+    + '<div style="font-size:12px;color:#9a5a0a;margin-top:2px;">&#8212; Not answered</div></div>';
+  list.appendChild(banner);
+
+  qs.forEach((q, i) => {
+    const ua         = state.answers[i];
+    const isCorrect  = ua === q.answer;
     const unanswered = ua === undefined;
-    const item = document.createElement('div');
-    item.className = 'review-item';
-    const pillCls = unanswered ? 'pill-ok' : correct ? 'pill-good' : 'pill-bad';
-    const pillLabel = unanswered ? 'Unanswered' : correct ? 'Correct' : 'Incorrect';
-    let html = '<div class="review-header"><span class="review-qnum">Q' + (i+1) + ' \u2014 ' + q.topic + '</span><span class="pill ' + pillCls + '">' + pillLabel + '</span></div>';
+    const item       = document.createElement('div');
+
+    // Bold left border color per status
+    const borderColor = unanswered ? '#f0a830' : isCorrect ? '#2d7a2d' : '#a32d2d';
+    const bgColor     = unanswered ? '#fffdf5' : isCorrect ? '#f6fbf6' : '#fdf6f6';
+    item.style.cssText = 'border-left:4px solid ' + borderColor + ';background:' + bgColor + ';';
+    item.className   = 'review-item';
+
+    const statusIcon  = unanswered ? '&#8212;' : isCorrect ? '&#10003;' : '&#10007;';
+    const statusColor = unanswered ? '#9a5a0a' : isCorrect ? '#1a5a1a' : '#7a1a1a';
+    const pillCls     = unanswered ? 'pill-ok' : isCorrect ? 'pill-good' : 'pill-bad';
+    const pillLabel   = unanswered ? 'Not answered' : isCorrect ? 'Correct' : 'Incorrect';
+
+    let html = '<div class="review-header">'
+      + '<span class="review-qnum" style="font-weight:600;">Q' + (i+1) + ' &mdash; ' + q.topic + '</span>'
+      + '<span class="pill ' + pillCls + '" style="font-size:12px;"><span style="color:' + statusColor + '">' + statusIcon + '</span> ' + pillLabel + '</span>'
+      + '</div>';
     html += '<div class="review-skill">' + q.skill + '</div>';
-    if (!unanswered && !correct) html += '<div class="review-ans review-wrong-ans">Your answer: <strong>' + LETTERS[ua] + ') ' + q.options[ua].split('\n')[0] + '</strong></div>';
-    html += '<div class="review-ans review-correct-ans">Correct: <strong>' + LETTERS[q.answer] + ') ' + q.options[q.answer].split('\n')[0] + '</strong></div>';
-    html += '<div class="review-hint">View full question &amp; explanation \u2192</div>';
+    if (unanswered) {
+      html += '<div class="review-ans" style="color:#9a5a0a;margin-top:4px;">&#8212; You did not answer this question.</div>';
+    } else if (!isCorrect) {
+      html += '<div class="review-ans review-wrong-ans">&#10007; Your answer: <strong>' + LETTERS[ua] + ') ' + q.options[ua].split('\n')[0] + '</strong></div>';
+    }
+    html += '<div class="review-ans review-correct-ans">&#10003; Correct: <strong>' + LETTERS[q.answer] + ') ' + q.options[q.answer].split('\n')[0] + '</strong></div>';
+    html += '<div class="review-hint">View full question &amp; explanation &#8594;</div>';
     item.innerHTML = html;
-    item.onclick = () => openQuestionFromReview(i);
+    item.onclick   = () => openQuestionFromReview(i);
     list.appendChild(item);
   });
   show('review-screen');
@@ -1289,9 +1390,126 @@ function openQuestionFromReview(idx) {
 
 function resetExam() {
   clearInterval(state.timerInterval);
-  state = { mode: state.mode, current: 0, answers: {}, flagged: new Set(), submitted: false, startTime: null, timerInterval: null, timeLeft: 90*60, reviewingFromList: false, activeQuestions: [] };
+  state = { mode: state.mode, current: 0, answers: {}, flagged: new Set(),
+    submitted: false, startTime: null, timerInterval: null,
+    timeLeft: 90*60, reviewingFromList: false, activeQuestions: [] };
   show('start-screen');
 }
+
+// ─── PDF EXPORT ──────────────────────────────────────────────────────────────
+function exportPDF(mode) {
+  // mode: 'both' = questions + answer key on last page
+  //       'key'  = answer key only
+  const qs = getActiveQuestions();
+  if (!qs || qs.length === 0) { alert('No questions to export. Please start an exam first.'); return; }
+
+  const win = window.open('', '_blank');
+  const examTitle = document.title;
+  const modeLabel = state.mode === 'chunked' ? '10-Question Practice' : '42-Question Exam';
+
+  let html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>${examTitle} — Export</title>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; font-size: 11pt; color: #000; margin: 0; padding: 0; }
+  .page { width: 7.5in; margin: 0 auto; padding: 0.75in 0.75in 0.75in 0.75in; }
+  h1 { font-size: 16pt; margin: 0 0 4px 0; }
+  .meta { font-size: 10pt; color: #555; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+  .question-block { margin-bottom: 22px; page-break-inside: avoid; }
+  .q-num { font-weight: bold; font-size: 11pt; }
+  .q-topic { font-size: 9pt; color: #555; font-style: italic; margin-bottom: 4px; }
+  .q-text { margin: 6px 0; line-height: 1.5; }
+  .q-code { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 8px 12px;
+    font-family: 'Courier New', Courier, monospace; font-size: 9.5pt; white-space: pre;
+    margin: 6px 0 8px 0; line-height: 1.5; overflow-x: auto; }
+  .option { display: flex; gap: 10px; margin: 3px 0 3px 12px; line-height: 1.5; }
+  .opt-ltr { font-weight: bold; min-width: 18px; }
+  .opt-body { font-family: 'Courier New', Courier, monospace; font-size: 9.5pt; white-space: pre-wrap; }
+  .opt-body.plain { font-family: Georgia, serif; font-size: 11pt; white-space: normal; }
+  .answer-key-page { page-break-before: always; }
+  .ak-title { font-size: 15pt; font-weight: bold; margin-bottom: 6px; }
+  .ak-meta { font-size: 10pt; color: #555; margin-bottom: 18px; border-bottom: 1px solid #ccc; padding-bottom: 8px; }
+  .ak-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px 16px; }
+  .ak-item { font-size: 11pt; }
+  .ak-item span { font-weight: bold; color: #1a5fa8; }
+  @media print {
+    body { margin: 0; }
+    .page { width: 100%; padding: 0.5in; }
+    .no-print { display: none; }
+  }
+</style>
+</head><body>`;
+
+  if (mode === 'both') {
+    // ── Questions pages ──
+    html += `<div class="page">`;
+    html += `<h1>${examTitle}</h1>`;
+    html += `<div class="meta">${modeLabel} &nbsp;·&nbsp; ${qs.length} Questions &nbsp;·&nbsp; AP Computer Science A</div>`;
+
+    qs.forEach((q, i) => {
+      html += `<div class="question-block">`;
+      html += `<div class="q-topic">${q.topic}</div>`;
+      html += `<div class="q-num">Question ${i+1}.</div>`;
+      html += `<div class="q-text">${escHtml(q.text)}</div>`;
+      if (q.code) {
+        html += `<div class="q-code">${escHtml(q.code)}</div>`;
+      }
+      q.options.forEach((opt, j) => {
+        const isCode = q.optIsCode && q.optIsCode[j];
+        html += `<div class="option"><span class="opt-ltr">${LETTERS[j]})</span>`
+          + `<span class="opt-body ${isCode ? '' : 'plain'}">${escHtml(opt)}</span></div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>`; // end page
+  }
+
+  // ── Answer Key page ──
+  const keyClass = mode === 'key' ? 'page' : 'answer-key-page page';
+  html += `<div class="${keyClass}">`;
+  html += `<div class="ak-title">${examTitle} — Answer Key</div>`;
+  html += `<div class="ak-meta">${modeLabel} &nbsp;·&nbsp; ${qs.length} Questions</div>`;
+  html += `<div class="ak-grid">`;
+  qs.forEach((q, i) => {
+    html += `<div class="ak-item">Q${i+1}: <span>${LETTERS[q.answer]}</span></div>`;
+  });
+  html += `</div>`;
+
+  // Explanations
+  html += `<div style="margin-top:24px;border-top:1px solid #ccc;padding-top:14px;">`;
+  html += `<div style="font-size:12pt;font-weight:bold;margin-bottom:12px;">Explanations</div>`;
+  qs.forEach((q, i) => {
+    if (q.explanation) {
+      html += `<div style="margin-bottom:12px;page-break-inside:avoid;">`;
+      html += `<div style="font-weight:bold;font-size:10pt;">Q${i+1} (Answer: ${LETTERS[q.answer]}) — ${escHtml(q.topic)}</div>`;
+      html += `<div style="font-size:10pt;margin-top:3px;line-height:1.5;color:#222;">${escHtml(q.explanation)}</div>`;
+      html += `</div>`;
+    }
+  });
+  html += `</div></div>`; // end explanations + key page
+
+  html += `</body></html>`;
+
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => win.print(), 600);
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function exportFromStart(mode) {
+  // Build questions based on current mode selection without starting the exam
+  const qs = state.mode === 'chunked' ? buildChunk() : buildQuestionBank();
+  // Temporarily store so exportPDF can use getActiveQuestions()
+  state.activeQuestions = qs;
+  exportPDF(mode);
+}
+
 </script>
 </body>
 </html>
