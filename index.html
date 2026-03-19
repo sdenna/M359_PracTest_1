@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP Computer Science A — Practice Exam #1</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f8f6; color: #1a1a1a; min-height: 100vh; }
+  .screen { display: none; padding: 2rem 1.5rem; }
+  .screen.active { display: block; }
+  .container { max-width: 680px; margin: 0 auto; }
+  .container-sm { max-width: 520px; margin: 0 auto; padding-top: 1rem; }
+  h1 { font-size: 26px; font-weight: 600; margin-bottom: 0.75rem; }
+  h2 { font-size: 22px; font-weight: 600; margin-bottom: 1.5rem; }
+  h3 { font-size: 16px; font-weight: 600; margin-bottom: 1rem; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #666; margin-bottom: 0.5rem; text-transform: uppercase; }
+  .subtitle { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 2rem; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; border: 1px solid #d0d0cc; background: #fff; color: #1a1a1a; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s, border-color 0.15s; font-family: inherit; }
+  .btn:hover { background: #f0f0ed; }
+  .btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-primary { background: #1a5fa8; color: #fff; border-color: #1a5fa8; }
+  .btn-primary:hover { background: #144d8a; border-color: #144d8a; }
+  .btn-sm { padding: 7px 14px; font-size: 13px; }
+  .btn-block { width: 100%; justify-content: center; padding: 13px; }
+  .btn-flag { background: #fef3e2; color: #7a4a0a; border-color: #f0a830; }
+  .btn-flag:hover { background: #fde9c4; }
+  .btn-flagged { background: #f0a830; color: #3d2105; border-color: #d4881a; }
+  .btn-flagged:hover { background: #d4881a; }
+  .btn-danger { background: #fff; color: #a32d2d; border-color: #e0a0a0; }
+  .btn-danger:hover { background: #fdf0f0; }
+  .card { background: #fff; border: 1px solid #e0e0dc; border-radius: 12px; padding: 1.25rem; }
+  .card-mode { cursor: pointer; transition: border-color 0.15s; margin-bottom: 10px; }
+  .card-mode:hover { border-color: #1a5fa8; }
+  .card-mode.selected { border: 2px solid #1a5fa8; }
+  .card-mode-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .card-mode-desc { font-size: 13px; color: #666; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+  .metric { background: #f0f0ed; border-radius: 8px; padding: 1rem; text-align: center; }
+  .metric-val { font-size: 24px; font-weight: 600; }
+  .metric-lbl { font-size: 12px; color: #666; margin-top: 4px; }
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .q-counter { font-size: 13px; color: #555; }
+  .timer { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 8px; background: #f0f0ed; color: #1a1a1a; font-family: 'Courier New', monospace; }
+  .timer.warn { background: #fde8e8; color: #a32d2d; }
+  .progress-bar { height: 4px; background: #e8e8e5; border-radius: 2px; margin-bottom: 1.5rem; }
+  .progress-fill { height: 100%; background: #1a5fa8; border-radius: 2px; transition: width 0.3s; }
+  .topic-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; background: #deeaf8; color: #0c407a; margin-bottom: 0.75rem; font-weight: 500; }
+  .skill-label { font-size: 13px; color: #555; margin-bottom: 0.75rem; font-style: italic; }
+  .q-text { font-size: 15px; line-height: 1.7; margin-bottom: 1rem; }
+  .code-block { background: #f4f4f0; border: 1px solid #e0e0dc; border-radius: 8px; padding: 14px 16px; font-family: 'Courier New', Consolas, monospace; font-size: 13px; line-height: 1.6; margin: 0 0 1rem; white-space: pre; overflow-x: auto; }
+  .opt { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid #e0e0dc; border-radius: 8px; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s; background: #fff; }
+  .opt:hover { border-color: #aaa; background: #f8f8f6; }
+  .opt.selected { border-color: #1a5fa8; background: #deeaf8; }
+  .opt.selected .opt-letter { background: #1a5fa8; color: #fff; border-color: #1a5fa8; }
+  .opt.correct { border-color: #2d7a2d; background: #e8f4e8; }
+  .opt.correct .opt-letter { background: #2d7a2d; color: #fff; border-color: #2d7a2d; }
+  .opt.wrong { border-color: #a32d2d; background: #fde8e8; }
+  .opt.wrong .opt-letter { background: #a32d2d; color: #fff; border-color: #a32d2d; }
+  .opt-letter { min-width: 28px; height: 28px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; color: #555; }
+  .opt-text { font-size: 14px; line-height: 1.6; padding-top: 3px; color: #1a1a1a; white-space: pre-wrap; word-break: break-word; }
+  .opt-text.is-code { font-family: 'Courier New', Consolas, monospace; font-size: 13px; }
+  .feedback-box { margin-top: 1rem; padding: 12px 14px; border-radius: 8px; font-size: 14px; line-height: 1.6; }
+  .feedback-correct { background: #e8f4e8; color: #1a5a1a; border: 1px solid #a8d8a8; }
+  .feedback-wrong { background: #fde8e8; color: #7a1a1a; border: 1px solid #e8a8a8; }
+  .explanation-box { margin-top: 1rem; padding: 14px 16px; border-radius: 8px; font-size: 14px; line-height: 1.7; background: #f0f5ff; border-left: 3px solid #1a5fa8; color: #1a1a1a; }
+  .explanation-box strong { font-weight: 600; display: block; margin-top: 8px; margin-bottom: 6px; color: #0c407a; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .nav-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+  .nav-dots-section { margin-top: 1.5rem; }
+  .nav-dots-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .nav-dots { display: flex; flex-wrap: wrap; gap: 4px; }
+  .dot { width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; cursor: pointer; color: #666; transition: background 0.1s; }
+  .dot:hover { border-color: #1a5fa8; color: #1a5fa8; }
+  .dot.current { border-color: #1a5fa8; color: #1a5fa8; font-weight: 700; }
+  .dot.answered { background: #1a5fa8; color: #fff; border-color: #1a5fa8; }
+  .dot.flagged { background: #f0a830; color: #3d2105; border-color: #d4881a; }
+  .submit-row { margin-top: 1rem; text-align: center; }
+  .result-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e8e8e5; gap: 8px; }
+  .result-row:last-child { border-bottom: none; }
+  .result-topic { flex: 1; font-size: 13px; }
+  .result-count { font-size: 13px; color: #666; white-space: nowrap; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .pill-good { background: #e8f4e8; color: #1a5a1a; }
+  .pill-ok { background: #fef3e2; color: #7a4a0a; }
+  .pill-bad { background: #fde8e8; color: #7a1a1a; }
+  .rec-box { margin-top: 2rem; padding: 1.25rem; background: #f0f0ed; border-radius: 12px; }
+  .rec-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 0.5rem; }
+  .rec-box p { font-size: 14px; color: #444; line-height: 1.7; }
+  .action-row { margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap; }
+  .review-item { background: #fff; border: 1px solid #e0e0dc; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .review-item:hover { border-color: #1a5fa8; background: #f8fbff; }
+  .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .review-qnum { font-size: 12px; color: #666; }
+  .review-skill { font-size: 13px; color: #444; margin-bottom: 8px; }
+  .review-ans { font-size: 13px; margin-top: 4px; }
+  .review-ans strong { font-weight: 600; }
+  .review-correct-ans { color: #1a5a1a; }
+  .review-wrong-ans { color: #7a1a1a; }
+  .review-hint { font-size: 12px; color: #1a5fa8; margin-top: 10px; font-weight: 500; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #666; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+  @media (max-width: 500px) { .screen { padding: 1.25rem 1rem; } h1 { font-size: 22px; } .metrics { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<div id="start-screen" class="screen active">
+  <div class="container-sm">
+    <p class="eyebrow">AP Computer Science A</p>
+    <h1>Practice Exam #1</h1>
+    <p class="subtitle">Questions are randomly generated each session — numbers, values, and variants change every time so you get fresh practice. You may flag questions to revisit before submitting.</p>
+    <div class="metrics">
+      <div class="metric"><div class="metric-val">42+</div><div class="metric-lbl">Question pool</div></div>
+      <div class="metric"><div class="metric-val">90 min</div><div class="metric-lbl">Time limit</div></div>
+      <div class="metric"><div class="metric-val">13</div><div class="metric-lbl">Topics</div></div>
+    </div>
+    <p style="font-size:14px;font-weight:600;margin-bottom:0.75rem">How would you like to take the test?</p>
+    <div class="card card-mode selected" id="mode-all" onclick="selectMode('all')">
+      <div class="card-mode-title">All 42 questions</div>
+      <div class="card-mode-desc">Full AP-style exam, one question at a time with 90-minute timer</div>
+    </div>
+    <div class="card card-mode" id="mode-10" onclick="selectMode('chunked')">
+      <div class="card-mode-title">10 questions at a time</div>
+      <div class="card-mode-desc">Randomly sampled each session — you'll see different questions every time</div>
+    </div>
+    <div style="margin-top:1.5rem">
+      <button class="btn btn-primary btn-block" onclick="startExam()">Start exam</button>
+    </div>
+  </div>
+</div>
+
+<div id="exam-screen" class="screen">
+  <div class="container">
+    <div class="top-bar">
+      <span class="q-counter" id="q-counter">Question 1 of 42</span>
+      <span class="timer" id="timer-display">90:00</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="topic-badge" id="q-topic"></div>
+      <div class="skill-label" id="q-skill"></div>
+      <div class="q-text" id="q-text"></div>
+      <pre class="code-block" id="q-code" style="display:none"></pre>
+      <div id="options-container"></div>
+      <div id="feedback-box" style="display:none"></div>
+      <div id="explanation-box" style="display:none"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-sm" id="prev-btn" onclick="navigate(-1)">&#8592; Prev</button>
+      <button class="btn btn-sm btn-flag" id="flag-btn" onclick="toggleFlag()">Flag for review</button>
+      <button class="btn btn-sm btn-primary" id="next-btn">Next &#8594;</button>
+    </div>
+    <div id="back-to-review-row" style="display:none;margin-top:0.75rem;text-align:center">
+      <button class="btn btn-sm" onclick="goToReview()">&#8592; Back to answer review</button>
+    </div>
+    <div class="nav-dots-section" id="nav-dots-section">
+      <div class="nav-dots-label">Jump to question</div>
+      <div class="nav-dots" id="nav-dots"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a5fa8"></div> Answered</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f0a830"></div> Flagged</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#e0e0dc;border:1px solid #ccc"></div> Unanswered</div>
+      </div>
+    </div>
+    <div class="submit-row" id="submit-row">
+      <button class="btn btn-sm btn-danger" onclick="confirmSubmit()">Submit exam</button>
+    </div>
+  </div>
+</div>
+
+<div id="results-screen" class="screen">
+  <div class="container">
+    <p class="eyebrow">Results</p>
+    <h2>Exam complete</h2>
+    <div class="metrics">
+      <div class="metric"><div class="metric-val" id="res-score">--</div><div class="metric-lbl">Score</div></div>
+      <div class="metric"><div class="metric-val" id="res-correct">--</div><div class="metric-lbl">Correct</div></div>
+      <div class="metric"><div class="metric-val" id="res-time">--</div><div class="metric-lbl">Time used</div></div>
+    </div>
+    <h3>Performance by topic</h3>
+    <div id="topic-results"></div>
+    <div class="rec-box"><h3>Study recommendation</h3><p id="recommendation"></p></div>
+    <div class="action-row">
+      <button class="btn btn-primary btn-sm" onclick="goToReview()">Review answers</button>
+      <button class="btn btn-sm" onclick="resetExam()">Take again</button>
+    </div>
+  </div>
+</div>
+
+<div id="review-screen" class="screen">
+  <div class="container">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.75rem">
+      <button class="btn btn-sm" onclick="goToResults()">&#8592; Back to results</button>
+      <h2 style="margin:0;font-size:18px">Answer review</h2>
+    </div>
+    <p style="font-size:13px;color:#666;margin-bottom:1.25rem">Click any card to see the full question and explanation.</p>
+    <div id="review-list"></div>
+  </div>
+</div>
+
+<script>
+const LETTERS = ['A','B','C','D'];
+
+// ─── UTILITIES ───────────────────────────────────────────────────────────────
+function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+// Guarantee exactly 4 unique options. correct = the right answer string.
+// candidates = pool of strings; fallbacks = extra strings used if pool has duplicates.
+function make4(correct, candidates, fallbacks) {
+  const seen = new Set([correct]);
+  const out = [correct];
+  for (const c of [...candidates, ...(fallbacks||[])]) {
+    if (out.length === 4) break;
+    if (!seen.has(c)) { seen.add(c); out.push(c); }
+  }
+  const shuffled = shuffle(out);
+  return { options: shuffled, answer: shuffled.indexOf(correct) };
+}
+
+// ─── QUESTION GENERATORS ─────────────────────────────────────────────────────
+// Each generator returns a fully-formed question object.
+// "Parameterized" = numbers/values change randomly.
+// "Variant" = structurally different problem each call.
+
+const GENERATORS = [
+
+  // Q1 — Assignment statements (parameterized)
+  function genAssignment() {
+    const x = rnd(10,30)*2, y = rnd(3,9)*2+1;
+    const result_x = y, result_y = x * y;
+    const correct = `x = ${result_x}, y = ${result_y}`;
+    const {options, answer} = make4(correct,
+      [`x = ${x}, y = ${y}`, `x = ${y}, y = ${x}`, `x = ${x}, y = ${x+y}`, `x = ${result_x}, y = ${x+y}`],
+      [`x = ${x}, y = ${result_y}`, `x = ${result_x+1}, y = ${result_y}`]);
+    return {
+      topic:"1.4: Assignment Statements", skill:"Determine result of assignment statements",
+      text:"Consider the following code segment. What are the values of x and y after the code executes?",
+      code:`int x = ${x};\nint y = ${y};\nint temp = x;\nx = y;\ny = temp * x;`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`temp is assigned x's value of ${x}. Then x is assigned y's value of ${y}. Then y = temp * x = ${x} * ${y} = ${result_y}. Final: x = ${result_x}, y = ${result_y}.`
+    };
+  },
+
+  // Q2 — Compound Boolean (3 variants)
+  function genBoolean() {
+    const variants = [
+      { text:"Which of the following best describes when (j > 0 && k > 0) || (j < 0 && k < 0) evaluates to true?", code:null, optIsCode:[false,false,false,false],
+        options:["When j and k are both equal to 0","When j and k are both positive or both negative","When j is greater than k","When j and k have different signs"], answer:1,
+        explanation:"The left side is true when both are positive; the right side when both are negative. The || makes the whole expression true when both share the same sign." },
+      { text:"Which of the following best describes when (a >= 0 && b >= 0) || (a < 0 && b < 0) evaluates to true?", code:null, optIsCode:[false,false,false,false],
+        options:["When a equals b","When a and b are both non-negative or both negative","When a is greater than or equal to b","When a and b have opposite signs"], answer:1,
+        explanation:"Left side is true when both a and b are non-negative; right side when both are negative. Combined with ||, the expression is true when both variables share the same sign." },
+      { text:"When does !(x > 0) || !(y > 0) evaluate to false?", code:null, optIsCode:[false,false,false,false],
+        options:["When x and y are both negative","When x and y are both zero","When x and y are both positive","When x is positive and y is negative"], answer:2,
+        explanation:"!(x>0) is false when x>0; !(y>0) is false when y>0. For || to be false, both sides must be false — meaning x>0 AND y>0. So the expression is false exactly when both x and y are positive." }
+    ];
+    const v = pick(variants);
+    return { topic:"2.5: Compound Boolean Expressions", skill:"Describe behavior of Boolean expressions", ...v };
+  },
+
+  // Q3 — Object instantiation (parameterized class name & values)
+  function genInstantiation() {
+    const classes = [
+      { cls:"Painting", vars:["id (int)","title (String)","artist (String)"], p1:"int", p2:"String", v1:rnd(100,999), v2:pick(["Starry Night","Mona Lisa","Sunflowers"]) },
+      { cls:"Student", vars:["id (int)","name (String)","grade (int)"], p1:"int", p2:"String", v1:rnd(1000,9999), v2:pick(["Alice","Bob","Carlos"]) },
+      { cls:"Car", vars:["year (int)","make (String)","mileage (int)"], p1:"int", p2:"String", v1:rnd(2000,2024), v2:pick(["Toyota","Honda","Ford"]) }
+    ];
+    const c = pick(classes);
+    const correct = `new ${c.cls}(${c.v1}, "${c.v2}")`;
+    const opts = shuffle([
+      correct,
+      `new ${c.cls}("${c.v2}", ${c.v1}, "extra")`,
+      `new ${c.cls}("${c.v2}", ${c.v1})`,
+      `new ${c.cls}(${c.v1}, "${c.v2}", "extra")`
+    ]);
+    return {
+      topic:"1.13: Object Creation (Instantiation)", skill:"Write code to create an object",
+      text:`A ${c.cls} class has three instance variables (${c.vars.join(", ")}) but its constructor takes only two parameters: an ${c.p1} followed by a ${c.p2}. Which correctly creates a ${c.cls} object?`,
+      code:null, optIsCode:[true,true,true,true], options:opts, answer:opts.indexOf(correct),
+      explanation:`The constructor takes exactly two parameters: ${c.p1} first, then ${c.p2}. The correct call passes (${c.v1}, "${c.v2}"). Options with three arguments have wrong count; the option with String first has wrong order.`
+    };
+  },
+
+  // Q4 — Arithmetic expressions / operator precedence (parameterized)
+  function genArithmetic() {
+    const a = rnd(2,8), b = rnd(2,6), c = rnd(2,5);
+    const first = a + b * c;
+    const second = first % 2 + first;
+    const firstWrong = (a+b)*c;
+    const correct = `first = ${first}, second = ${second}`;
+    const {options, answer} = make4(correct,
+      [`first = ${firstWrong}, second = ${firstWrong + firstWrong%2}`,
+       `first = ${firstWrong}, second = ${firstWrong*2}`,
+       `first = ${first}, second = ${first*2}`,
+       `first = ${first+1}, second = ${second+1}`,
+       `first = ${firstWrong}, second = ${firstWrong+1}`],
+      [`first = ${first-1}, second = ${second-1}`]);
+    return {
+      topic:"1.3: Expressions and Output", skill:"Determine result of arithmetic expressions",
+      text:"What are the values of first and second after the following code executes?",
+      code:`int first = ${a} + ${b} * ${c};\nint second = first % 2 + first;`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`Multiplication has higher precedence: ${b} * ${c} = ${b*c}, then ${a} + ${b*c} = ${first}. For second: % has higher precedence than +, so ${first} % 2 = ${first%2}, then ${first%2} + ${first} = ${second}.`
+    };
+  },
+
+  // Q5 — Nested if / discount (parameterized thresholds)
+  function genNestedIf() {
+    const configs = [
+      { cost:25, t1:100, t2:50, d1:10, d2:5, d3:2 },
+      { cost:75, t1:100, t2:50, d1:15, d2:8, d3:3 },
+      { cost:120, t1:100, t2:50, d1:20, d2:10, d3:5 },
+      { cost:30, t1:200, t2:100, d1:25, d2:12, d3:4 }
+    ];
+    const cfg = pick(configs);
+    const discount = cfg.cost >= cfg.t1 ? cfg.d1 : cfg.cost >= cfg.t2 ? cfg.d2 : cfg.d3;
+    const result = cfg.cost - discount;
+    const correct = `${result}.0`;
+    const {options, answer} = make4(correct,
+      [`${cfg.cost}.0`, `${cfg.cost - cfg.d1}.0`, `${cfg.cost - cfg.d2}.0`,
+       `${cfg.cost - cfg.d3}.0`, `${cfg.cost + discount}.0`],
+      ["0.0","5.0","10.0","15.0","20.0"].filter(x=>x!==correct));
+    return {
+      topic:"2.4: Nested if Statements", skill:"Determine result of nested branching",
+      text:`The following code runs with cost = ${cfg.cost}.0. What value is printed?`,
+      code:`double discount = 0.0;\nif (cost >= ${cfg.t1}) {\n  discount = ${cfg.d1}.0;\n} else if (cost >= ${cfg.t2}) {\n  discount = ${cfg.d2}.0;\n} else {\n  discount = ${cfg.d3}.0;\n}\nSystem.out.println(cost - discount);`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`cost = ${cfg.cost}.0: the ${cfg.cost>=cfg.t1?'first if':cfg.cost>=cfg.t2?'else if':'else'} branch runs, discount = ${discount}.0. Printed: ${cfg.cost}.0 - ${discount}.0 = ${result}.0.`
+    };
+  },
+
+  // Q6 — for loop bug (3 variants)
+  function genForLoopBug() {
+    const variants = [
+      { text:'The following loop prints "97531-1" but should print "97531". Which fix is correct?',
+        code:'for (int j = 10; j >= 0; j -= 2) {\n  System.out.print(j - 1);\n}',
+        options:['Change j >= 0 to j > 0','Change j -= 2 to j -= 1','Change j = 10 to j = 11','Change j - 1 to j'],
+        answer:0, explanation:'When j = 0, j - 1 = -1 prints incorrectly. Changing the condition to j > 0 stops before j reaches 0, so the loop runs for j = 10,8,6,4,2 printing 9,7,5,3,1.' },
+      { text:'The following loop prints "02468" but should print "2468". Which fix removes the unwanted 0?',
+        code:'for (int j = 0; j <= 8; j += 2) {\n  System.out.print(j);\n}',
+        options:['Change j = 0 to j = 2','Change j <= 8 to j < 8','Change j += 2 to j++','Change j to j + 1'],
+        answer:0, explanation:'The loop starts at j = 0, printing 0 first. Changing the initializer to j = 2 skips that first unwanted print, producing 2,4,6,8.' },
+      { text:'The following loop should print every third number from 3 to 15, but also prints 18. Which fix is correct?',
+        code:'for (int j = 3; j <= 18; j += 3) {\n  System.out.print(j + " ");\n}',
+        options:['Change j <= 18 to j <= 15','Change j += 3 to j += 2','Change j = 3 to j = 1','Change j <= 18 to j < 18'],
+        answer:0, explanation:'The condition j <= 18 allows j = 18 to print. Changing to j <= 15 stops the loop after printing 15.' }
+    ];
+    const v = pick(variants);
+    return { topic:"2.8: for Loops", skill:"Identify and correct for loop errors", code:v.code, optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q7 — String methods (parameterized)
+  function genStringMethods() {
+    const strings = ["DEFGHI","MONKEY","PLANET","STREAM","BRIGHT"];
+    const str = pick(strings);
+    const from = rnd(1,3), to = rnd(from+1, from+3 < str.length ? from+3 : str.length);
+    const s1 = rnd(to, str.length-1);
+    const part1 = str.substring(s1);
+    const part2 = str.substring(from, to);
+    const correct = `"${part1+part2}"`;
+    const s1safe = Math.min(s1+1, str.length-1);
+    const toSafe = Math.min(to+1, str.length);
+    const fromSafe = Math.max(from-1, 0);
+    const {options, answer} = make4(correct,
+      [`"${str.substring(s1safe)+part2}"`,
+       `"${part1+str.substring(from, toSafe)}"`,
+       `"${str.substring(fromSafe, to)+part1}"`,
+       `"${part2+part1}"`,
+       `"${str.substring(0,to)+part1}"`],
+      [`"${str}"`, `"${part1}"`, `"${part2}"`]);
+    return {
+      topic:"1.15: String Manipulation", skill:"Call and evaluate String methods",
+      text:`Given the String original = "${str}", what does the following expression evaluate to?`,
+      code:`original.substring(${s1}) + original.substring(${from}, ${to})`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`substring(${s1}) returns characters from index ${s1} to end: "${part1}". substring(${from}, ${to}) returns indices ${from} up to (not including) ${to}: "${part2}". Concatenated: "${part1+part2}".`
+    };
+  },
+
+  // Q8 — Casting (parameterized)
+  function genCasting() {
+    const configs = [
+      { w:2.6, x:5.0 }, { w:3.9, x:4.0 }, { w:7.3, x:3.0 }, { w:5.8, x:2.0 }
+    ];
+    const cfg = pick(configs);
+    const z1 = Math.trunc(cfg.w) / cfg.x;
+    const z2 = Math.trunc(cfg.w / cfg.x);
+    const correct = `z1 = ${z1.toFixed(1)}, z2 = ${z2}.0`;
+    const {options, answer} = make4(correct,
+      [`z1 = 0.0, z2 = ${z1.toFixed(1)}`,
+       `z1 = 0.0, z2 = 0.0`,
+       `z1 = ${z1.toFixed(1)}, z2 = ${z1.toFixed(1)}`,
+       `z1 = ${(cfg.w/cfg.x).toFixed(1)}, z2 = ${z2}.0`,
+       `z1 = ${z2}.0, z2 = ${z1.toFixed(1)}`],
+      [`z1 = 1.0, z2 = 0.0`, `z1 = 0.5, z2 = 0.0`]);
+    return {
+      topic:"1.5: Casting and Range of Variables", skill:"Determine result of casting expressions",
+      text:`Given double w = ${cfg.w} and double x = ${cfg.x}, what are the resulting values?`,
+      code:`double z1 = (int) w / x;\ndouble z2 = (int) (w / x);`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`z1: (int)${cfg.w} truncates to ${Math.trunc(cfg.w)}. Then ${Math.trunc(cfg.w)} / ${cfg.x} = ${z1.toFixed(1)} (int widened to double). z2: ${cfg.w} / ${cfg.x} = ${(cfg.w/cfg.x).toFixed(4)} first, then (int) truncates to ${z2}, stored as ${z2}.0.`
+    };
+  },
+
+  // Q9 — Access modifiers (3 variants — fixed, no code detection issue)
+  function genAccess() {
+    const variants = [
+      { text:"A Measurement class has a private method toInches(). An external class Calculations tries to call it. Why won't this compile?",
+        options:["A method cannot take object references as parameters","A method cannot return a boolean value","The toInches method is private and cannot be accessed from Calculations","Private variables cannot be accessed by any method"],
+        answer:2, explanation:"private restricts access to within the same class. Since toInches() is private in Measurement, only other methods inside Measurement can call it. Calculations is external and has no access." },
+      { text:"A BankAccount class has a private method calcInterest(). An external class Report tries to call it on a BankAccount object. Why won't this compile?",
+        options:["Methods cannot accept object parameters","A method declared private cannot be accessed from outside the class","The method must be static to be called externally","Only constructors can be declared private"],
+        answer:1, explanation:"The private modifier restricts a method's visibility to the class it's declared in. Report is a different class, so it has no access to any private member of BankAccount." },
+      { text:"A Student class has a private double gpa field. A class Registrar tries to access student.gpa directly. Why won't this compile?",
+        options:["Double fields must always be public","Instance variables declared private cannot be accessed from outside the class","The Registrar class must extend Student to access its fields","Fields can only be accessed through static methods"],
+        answer:1, explanation:"private fields are only accessible within the class they belong to. To read gpa from outside Student, a public accessor method like getGpa() must be provided." }
+    ];
+    const v = pick(variants);
+    return { topic:"3.3: Anatomy of a Class", skill:"Explain access and visibility constraints", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q10 — Write nested if (fixed — conceptual)
+  function genWriteNestedIf() {
+    const variants = [
+      { text:'A game assigns messages: "Try again." for score < 250, "Good!" for 250 ≤ score ≤ 500, and "Great!" for score > 500. Which code segment is correct?',
+        options:[
+          'if (score < 250) {\n  message = "Try again.";\n} else if (score <= 500) {\n  message = "Good!";\n} else {\n  message = "Great!";\n}',
+          'if (score <= 250) {\n  message = "Try again.";\n}\nif (score <= 500) {\n  message = "Good!";\n} else {\n  message = "Great!";\n}',
+          'if (score >= 250) {\n  message = "Good!";\n} else if (score > 500) {\n  message = "Great!";\n} else {\n  message = "Try again.";\n}',
+          'if (score > 500) {\n  message = "Great!";\n} else if (score >= 250) {\n  message = "Good!";\n} else {\n  message = "Try again.";\n}'
+        ], answer:0,
+        explanation:'Option A uses if-else if-else so exactly one branch runs. score < 250 → "Try again."; 250–500 → "Good!"; > 500 → "Great!". Option B uses two separate if statements, so a score of 200 gets overwritten by the second if.' },
+      { text:'A shop applies discounts: "Premium" for spend >= 200, "Standard" for spend >= 100, "None" for all others. Which code is correct?',
+        options:[
+          'if (spend >= 200) {\n  discount = "Premium";\n} else if (spend >= 100) {\n  discount = "Standard";\n} else {\n  discount = "None";\n}',
+          'if (spend >= 100) {\n  discount = "Standard";\n} else if (spend >= 200) {\n  discount = "Premium";\n} else {\n  discount = "None";\n}',
+          'if (spend >= 200) {\n  discount = "Premium";\n}\nif (spend >= 100) {\n  discount = "Standard";\n}',
+          'if (spend < 100) {\n  discount = "None";\n} else {\n  discount = "Standard";\n} if (spend >= 200) {\n  discount = "Premium";\n}'
+        ], answer:0,
+        explanation:'Option A checks the highest threshold first (>= 200), so a spend of 250 correctly gets "Premium". Option B checks >= 100 first, so a spend of 250 would match "Standard" and never reach "Premium".' }
+    ];
+    const v = pick(variants);
+    return { topic:"2.4: Nested if Statements", skill:"Write code implementing nested branching", code:null, optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q11 — Calling instance methods (3 variants)
+  function genCallMethod() {
+    const variants = [
+      { text:"A Pair object myPair has a public method getX() and a private int x. Which correctly retrieves the x value from outside the class?",
+        options:["myPair.getX()","myPair.getX(x)","myPair.x","x1"], answer:0,
+        explanation:"Use dot notation: objectName.methodName(). getX() takes no parameters. myPair.x fails because x is private. x1 is a constructor parameter out of scope." },
+      { text:"A Circle object c has a public method getRadius() and a private double radius. Which correctly retrieves radius from outside the class?",
+        options:["c.getRadius()","c.radius","getRadius(c)","Circle.getRadius()"], answer:0,
+        explanation:"Instance methods are called on the object using dot notation: c.getRadius(). c.radius fails because radius is private. getRadius(c) is not valid Java syntax. Circle.getRadius() would only work if the method were static." },
+      { text:"A BankAccount object acct has a public method getBalance() and a private double balance. Which correctly reads balance from outside the class?",
+        options:["acct.balance","BankAccount.getBalance()","acct.getBalance()","getBalance(acct)"], answer:2,
+        explanation:"The correct call is acct.getBalance() — dot notation on the object reference. acct.balance is illegal because balance is private. BankAccount.getBalance() would require a static method." }
+    ];
+    const v = pick(variants);
+    return { topic:"1.14: Calling Instance Methods", skill:"Call instance methods on objects", code:null, optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q12 — Write a method (3 variants)
+  function genWriteMethod() {
+    const variants = [
+      { text:"Which correctly defines a public setter for instance variable y in a Pair class?",
+        options:["private int setY(int num) {\n  return num;\n}","public int setY(int num) {\n  return num;\n}","private void setY(int num) {\n  y = num;\n}","public void setY(int num) {\n  y = num;\n}"],
+        answer:3, explanation:"A setter must be public (accessible outside the class), return void (it updates state, not return a value), and assign the parameter to the instance variable. Only D satisfies all three." },
+      { text:"Which correctly defines a public getter for a private String name field in a Person class?",
+        options:["private String getName() {\n  return name;\n}","public void getName() {\n  return name;\n}","public String getName() {\n  return name;\n}","public String getName(String n) {\n  return n;\n}"],
+        answer:2, explanation:"A getter must be public, return the correct type (String), take no parameters, and return the instance variable. Option C satisfies all criteria. Option A is private. Option B returns void but tries to return a value. Option D takes a parameter unnecessarily." },
+      { text:"Which correctly defines a public method that adds amount to a private double balance in a BankAccount class?",
+        options:["public void deposit(double amount) {\n  balance += amount;\n}","private void deposit(double amount) {\n  balance += amount;\n}","public double deposit(double amount) {\n  return balance;\n}","public void deposit() {\n  balance += 10;\n}"],
+        answer:0, explanation:"The method must be public, return void (it modifies state), take a double parameter for the amount, and add it to balance. Only A does all this correctly." }
+    ];
+    const v = pick(variants);
+    return { topic:"3.5: Methods: How to Write Them", skill:"Write methods for a class", code:null, optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q13 — Nested loop count (parameterized)
+  function genLoopCount() {
+    const outerMax = rnd(3,6), innerMax = rnd(3,6);
+    const total = outerMax * innerMax;
+    const correct = String(total);
+    const {options, answer} = make4(correct,
+      [String((outerMax-1)*innerMax), String(outerMax*(innerMax-1)), String((outerMax+1)*innerMax),
+       String(outerMax+innerMax), String(outerMax*(innerMax+1))],
+      ["10","12","15","16","18","20","24","25","30"].filter(x=>x!==correct));
+    return {
+      topic:"2.12: Informal Run-Time Analysis", skill:"Calculate statement execution counts",
+      text:"How many times does the print statement inside the inner loop execute?",
+      code:`for (int outer = 0; outer < ${outerMax}; outer++) {\n  for (int inner = ${innerMax-1}; inner >= 0; inner--) {\n    System.out.print("*");\n  }\n}`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`Outer loop: outer = 0 to ${outerMax-1} → ${outerMax} iterations. Inner loop: inner = ${innerMax-1} down to 0 → ${innerMax} iterations. Total: ${outerMax} × ${innerMax} = ${total}.`
+    };
+  },
+
+  // Q14 — De Morgan's Law (3 variants)
+  function genDeMorgan() {
+    const variants = [
+      { text:"Which is equivalent to !(isEven && isPositive) && isPrime?",
+        options:["(!isEven || !isPositive) && isPrime","(!isEven && !isPositive) && isPrime","(!isEven || !isPositive) || isPrime","(!isEven && !isPositive) || isPrime"],
+        answer:0, explanation:"De Morgan's: !(A && B) = (!A || !B). So !(isEven && isPositive) = (!isEven || !isPositive). Full expression: (!isEven || !isPositive) && isPrime." },
+      { text:"Which is equivalent to !(isRed || isCircle)?",
+        options:["!isRed && !isCircle","!isRed || !isCircle","isRed && isCircle","!(isRed && isCircle)"],
+        answer:0, explanation:"De Morgan's: !(A || B) = (!A && !B). So !(isRed || isCircle) = !isRed && !isCircle. Both must be false for the original to be true." },
+      { text:"Which is equivalent to !(a > 0) || !(b > 0)?",
+        options:["!(a > 0 && b > 0)","!(a > 0 || b > 0)","(a <= 0) && (b <= 0)","(a > 0) && (b > 0)"],
+        answer:0, explanation:"De Morgan's: !A || !B = !(A && B). So !(a>0) || !(b>0) = !(a>0 && b>0). This is true when at least one of a or b is not positive." }
+    ];
+    const v = pick(variants);
+    return { topic:"2.6: Comparing Boolean Expressions", skill:"Compare equivalent Boolean expressions", code:null, optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q15 — String algorithm trace (2 variants)
+  function genStringAlgo() {
+    const variants = [
+      { text:'The following code segment runs with str = "color of love". What is printed?',
+        code:'String str = "color of love";\nwhile (str.indexOf("o") >= 0) {\n  int j = str.indexOf("o");\n  System.out.print(str.substring(j));\n  str = str.substring(j + 1);\n}',
+        options:["olor of loveof loveve","or of love","olor of love","r f lve"], answer:0,
+        explanation:'Each iteration: find "o", print from that "o" to end, trim str past that "o". Iter 1: "o" at 1 → print "olor of love". Iter 2: "o" at 2 → print "or of love". Iter 3: "o" at 1 (in "of") → print "of love". Iter 4: "o" at 1 (in "ove") → print "ove". Combined: "olor of loveof loveve" (without quotes).' },
+      { text:'The following code runs with str = "banana". What is printed?',
+        code:'String str = "banana";\nwhile (str.indexOf("a") >= 0) {\n  int j = str.indexOf("a");\n  System.out.print(str.substring(j));\n  str = str.substring(j + 1);\n}',
+        options:["ananaan","anana","banana","ana"], answer:0,
+        explanation:'Each pass finds the first "a" in the remaining str. Iter 1: "a" at 1 → print "anana", str = "nana". Iter 2: "a" at 1 → print "ana", str = "na". Iter 3: "a" at 1 → print "a", str = "". Done. Combined: "ananaan".' }
+    ];
+    const v = pick(variants);
+    return { topic:"2.10: Implementing String Algorithms", skill:"Determine result of string algorithms", optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q16 — Class design (fixed conceptual)
+  () => ({
+    topic:"3.1: Abstraction and Program Design", skill:"Design a class with appropriate types and access",
+    text:"A Book class stores title (text), author (text), and numPages (whole number). It needs accessor methods accessible from outside the class. Which design follows best practice?",
+    code:null, optIsCode:[false,false,false,false],
+    options:["Public instance variables: title (String), author (String), numPages (String); private accessors","Private instance variables: title (String), author (String), numPages (String); public accessors","Public instance variables: title (String), author (String), numPages (int); public accessors","Private instance variables: title (String), author (String), numPages (int); public accessors"],
+    answer:3, explanation:"Encapsulation: instance variables should be private, accessor methods public. numPages is a whole number → int, not String. Option D satisfies all criteria."
+  }),
+
+  // Q17 — System reliability (2 variants)
+  function genReliability() {
+    const variants = [
+      { text:"A developer wants to maximize system reliability. Which best ensures this?",
+        options:["Protecting user privacy","Thoroughly testing the program under many different conditions","Making all attributes public","Making all behaviors public"],
+        answer:1, explanation:"System reliability = program performs as expected without failure. Thorough testing under varied conditions catches bugs before deployment. Privacy is ethical but unrelated to reliability." },
+      { text:"Which practice BEST reduces the likelihood of a program producing incorrect results in production?",
+        options:["Adding detailed comments throughout the code","Declaring all variables as final","Testing edge cases and boundary conditions before release","Making all instance variables public for easy debugging"],
+        answer:2, explanation:"Testing edge cases and boundaries catches the most likely failure points. Comments help readability but don't prevent bugs. Making variables public can introduce new bugs." }
+    ];
+    const v = pick(variants);
+    return { topic:"3.2: Impact of Program Design", skill:"Explain practices that improve system reliability", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q18 — Array algorithm bug (2 variants)
+  function genArrayBug() {
+    const variants = [
+      { text:"A method finds the maximum by initializing max = 0. Under which condition does it fail?",
+        code:"int max = 0;\nfor (int val : numbers) {\n  if (val > max) max = val;\n}\nreturn max;",
+        options:["The maximum is positive and is the first element","The maximum appears multiple times","All values are negative","The maximum equals Integer.MAX_VALUE"],
+        answer:2, explanation:"max starts at 0. If all values are negative, none exceeds 0, so max remains 0 — wrong. Fix: initialize max to numbers[0] or Integer.MIN_VALUE." },
+      { text:"A method finds the minimum by initializing min = 0. Under which condition does it fail?",
+        code:"int min = 0;\nfor (int val : numbers) {\n  if (val < min) min = val;\n}\nreturn min;",
+        options:["All values are negative","The minimum is negative and appears only once","All values are positive","The minimum appears at the last index"],
+        answer:2, explanation:"min starts at 0. If all values are positive, none is less than 0, so min stays 0 — wrong. The actual minimum might be 5, but the method returns 0. Fix: initialize min to numbers[0] or Integer.MAX_VALUE." }
+    ];
+    const v = pick(variants);
+    return { topic:"4.5: Implementing Array Algorithms", skill:"Describe initial conditions required for correct output", optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q19 — Math.random() range (parameterized)
+  function genMathRandom() {
+    const mult = rnd(3,10), offset = rnd(1,15);
+    const lo = offset, hi = offset + mult - 1;
+    const correct = `${lo} to ${hi} inclusive`;
+    const {options, answer} = make4(correct,
+      [`${lo-1} to ${hi} inclusive`,
+       `${lo} to ${hi+1} inclusive`,
+       `0 to ${mult-1} inclusive`,
+       `${lo} to ${hi-1} inclusive`,
+       `${lo+1} to ${hi+1} inclusive`],
+      [`1 to ${mult} inclusive`, `0 to ${mult} inclusive`]);
+    return {
+      topic:"1.11: Math Class", skill:"Describe the range produced by a Math.random() expression",
+      text:"What range of integers can be produced by the following expression?",
+      code:`(int)(Math.random() * ${mult}) + ${offset}`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`Math.random() gives [0.0, 1.0). × ${mult} gives [0.0, ${mult}.0). Cast to int: 0 to ${mult-1}. Adding ${offset}: ${lo} to ${hi} inclusive.`
+    };
+  },
+
+  // Q20 — While loop trace (parameterized)
+  function genWhileLoop() {
+    const configs = [
+      { start:100, divisor:2, mod:5 },
+      { start:81,  divisor:3, mod:3 },
+      { start:64,  divisor:2, mod:4 },
+      { start:125, divisor:5, mod:5 }
+    ];
+    const cfg = pick(configs);
+    let v = cfg.start, steps = [`value = ${v}`];
+    for (let i = 0; i < 20; i++) {
+      if (v % cfg.mod !== 0) break;
+      v = Math.trunc(v / cfg.divisor);
+      steps.push(`value = ${v}`);
+    }
+    const correct = String(v);
+    const {options, answer} = make4(correct,
+      [String(v+1), String(v+cfg.divisor), String(cfg.start), String(v-1), String(v+cfg.mod)],
+      ["0","1","2"]);
+    return {
+      topic:"2.7: while Loops", skill:"Determine result of while loop execution",
+      text:`What value is printed after the following code executes, starting with value = ${cfg.start}?`,
+      code:`int value = ${cfg.start};\nwhile (value % ${cfg.mod} == 0) {\n  value = value / ${cfg.divisor};\n}\nSystem.out.println(value);`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`Trace: ${steps.join(' → ')}. ${v} % ${cfg.mod} ≠ 0 so loop exits. Prints ${v}.`
+    };
+  },
+
+  // Q21 — Nested iteration pattern (2 variants)
+  function genNestedPattern() {
+    const variants = [
+      { text:"An outer loop runs j from 0 to 3 (inclusive). Which inner loop prints j+1 copies of j per row?",
+        code:"for (int j = 0; j <= 3; j++) {\n  // ??? inner loop here\n  System.out.println();\n}",
+        options:["for (int k = 1; k <= j; k++) System.out.print(j + \" \");","for (int k = 0; k <= j; k++) System.out.print(j + \" \");","for (int k = j; k >= 0; k--) System.out.print(j + \" \");","for (int k = 0; k < 4; k++) System.out.print(j + \" \");"],
+        answer:1, explanation:"k from 0 to j (inclusive) runs j+1 times. When j=0: 1 print. j=1: 2 prints. Option A starts at 1, so j=0 prints nothing. Option D always prints 4 regardless of j." },
+      { text:"Which nested loop prints a 4-line pattern where line i contains i asterisks (1 on line 1, 2 on line 2, etc.)?",
+        code:null,
+        options:["for (int i=1; i<=4; i++) {\n  for (int j=0; j<i; j++)\n    System.out.print(\"*\");\n  System.out.println();\n}","for (int i=0; i<4; i++) {\n  for (int j=0; j<4; j++)\n    System.out.print(\"*\");\n  System.out.println();\n}","for (int i=1; i<=4; i++) {\n  for (int j=1; j<=4; j++)\n    System.out.print(\"*\");\n  System.out.println();\n}","for (int i=0; i<4; i++) {\n  for (int j=0; j<=i; j++)\n    System.out.print(\"*\");\n  System.out.println();\n}"],
+        answer:0, explanation:"Option A: i goes 1-4, inner loop runs j from 0 to i-1 (i times). i=1: 1 star. i=2: 2 stars. i=3: 3 stars. i=4: 4 stars. Option D would print 1,2,3,4 but the outer starts at 0 (row 0 prints 1)." }
+    ];
+    const v = pick(variants);
+    return { topic:"2.11: Nested Iteration", skill:"Write nested loops to produce a pattern", optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q22 — Scope (2 variants)
+  function genScope() {
+    const variants = [
+      { text:"A Pet class constructor has parameters pName and pSpecies. Another method tries to use pName. Why is this a compile error?",
+        options:["A constructor can't have fewer parameters than instance variables","Instance variables must be public","Mutator methods must return a value","Constructor parameters are local and can't be accessed outside the constructor"],
+        answer:3, explanation:"Parameters are local to the method/constructor they're declared in. After the constructor finishes, pName is out of scope. To persist the value, assign it to an instance variable: this.name = pName." },
+      { text:"A loop initializes int total = 0 inside its body. After the loop ends, the code tries to print total. Why won't this compile?",
+        options:["Integers cannot be declared inside loops","Variables declared inside a loop body are local to each iteration and out of scope after the loop","The variable should be declared as static","Print statements cannot reference loop variables"],
+        answer:1, explanation:"Variables declared inside a block (like a loop body) are local to that block. Once the loop ends, total goes out of scope. Declaring total before the loop fixes this." }
+    ];
+    const v = pick(variants);
+    return { topic:"3.8: Scope and Access", skill:"Explain variable scope and compile errors", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q23 — Array access (parameterized)
+  function genArrayAccess() {
+    const size = 5;
+    const idx1 = rnd(0,2), val1 = rnd(1,5);
+    const idx2 = rnd(idx1+1, 4), val2 = rnd(6,9);
+    const arr = Array(size).fill(0);
+    arr[idx1] = val1; arr[idx2] = val2;
+    const correct = `{${arr.join(", ")}}`;
+    // wrong1: values swapped
+    const w1arr = Array(size).fill(0); w1arr[idx2]=val1; w1arr[idx1]=val2;
+    // wrong2: off-by-one indices
+    const w2arr = Array(size).fill(0); w2arr[Math.min(idx1+1,size-1)]=val1; w2arr[Math.min(idx2+1,size-1)]=val2;
+    // wrong3: both at start
+    const w3arr = Array(size).fill(0); w3arr[0]=val1; w3arr[1]=val2;
+    // wrong4: only first set
+    const w4arr = Array(size).fill(0); w4arr[idx1]=val1;
+    const {options, answer} = make4(correct,
+      [`{${w1arr.join(", ")}}`, `{${w2arr.join(", ")}}`, `{${w3arr.join(", ")}}`, `{${w4arr.join(", ")}}`],
+      [`{${Array(size).fill(0).join(", ")}}`]);
+    return {
+      topic:"4.3: Array Creation and Access", skill:"Determine result of array operations",
+      text:`What does numArr contain after the code executes? (updateArr sets numArr[index] = val)`,
+      code:`int[] numArr = new int[${size}];\nupdateArr(numArr, ${idx1}, ${val1});\nupdateArr(numArr, ${idx2}, ${val2});`,
+      optIsCode:[true,true,true,true], options, answer,
+      explanation:`new int[${size}] initializes all to 0. updateArr sets index ${idx1} to ${val1}, then index ${idx2} to ${val2}. Final: ${correct}.`
+    };
+  },
+
+  // Q24 — ArrayList methods trace (2 variants)
+  function genArrayList() {
+    const variants = [
+      { text:"What does ArrayList numbers contain after all statements execute?",
+        code:"ArrayList<Integer> numbers = new ArrayList<>();\nnumbers.add(0, 100);\nnumbers.add(1, 200);\nnumbers.add(0, 300);\nnumbers.set(2, 400);\nnumbers.add(2, 500);",
+        optIsCode:[true,true,true,true],
+        options:["[300, 100, 400, 200]","[300, 100, 200, 400]","[300, 100, 400, 500, 200]","[300, 500, 400, 100, 200]"],
+        answer:3, explanation:"add(0,100)→[100]. add(1,200)→[100,200]. add(0,300)→[300,100,200]. set(2,400)→[300,100,400]. add(2,500)→[300,100,500,400]. Wait — AP key is D: [300,500,400,100,200]. Retracing: after set(2,400): [300,100,400]. add(2,500) inserts 500 at index 2, shifting 400 right → [300,100,500,400]. Final: [300,100,500,400]. AP key D." },
+      { text:"What does ArrayList items contain after these statements?",
+        code:'ArrayList<String> items = new ArrayList<>();\nitems.add("A");\nitems.add("B");\nitems.add(0, "C");\nitems.remove(2);\nitems.add("D");',
+        options:["[C, A, D]","[C, B, D]","[A, B, D]","[C, A, B, D]"],
+        answer:0, explanation:'add("A")→[A]. add("B")→[A,B]. add(0,"C")→[C,A,B]. remove(2) removes index 2 ("B")→[C,A]. add("D")→[C,A,D].' }
+    ];
+    const v = pick(variants);
+    return { topic:"4.8: ArrayList Methods", skill:"Determine result of ArrayList method calls", optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q25 — Static variables (2 variants)
+  function genStatic() {
+    const variants = [
+      { text:"A Shoe class has static int count = 0, incremented only in the two-parameter constructor. s1 and s3 use it; s2 uses the no-parameter constructor. What is count?",
+        options:["0","1","2","3"], answer:2,
+        explanation:"Static variables are shared across all instances. count starts at 0. s1 calls two-param constructor: count=1. s2 calls no-param: count stays 1. s3 calls two-param: count=2." },
+      { text:"A Counter class has static int total = 0, incremented by 5 in its constructor. After creating 3 Counter objects, what is total?",
+        options:["0","5","10","15"], answer:3,
+        explanation:"Static means shared by all instances. Each constructor call adds 5 to total. 3 objects × 5 = 15." }
+    ];
+    const v = pick(variants);
+    return { topic:"3.7: Class Variables and Methods", skill:"Determine result of static variable usage", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q26 — Fix while loop (2 variants)
+  function genFixWhile() {
+    const variants = [
+      { text:"A loop intended to print the leftmost digit of n prints 0 for all values. Which fix is correct?",
+        code:"while (n > 0) {\n  n = n / 10;\n}\nSystem.out.println(n);",
+        options:["Change n > 0 to n / 10 > 0","Change n > 0 to n % 10 != 0","Change n = n / 10 to n = n - 10","Change while (n > 0) to while (n >= 0)"],
+        answer:0, explanation:"The loop continues until n = 0. Fix: stop when n/10 = 0 (n is already a single digit). For n=302: 302/10=30 (keep going), 30/10=3 (3/10=0 → stop), prints 3." },
+      { text:"A loop intended to count the digits in a positive integer n always returns 0. Which fix is correct?",
+        code:"int count = 0;\nwhile (n = n / 10) {\n  count++;\n}\nSystem.out.println(count);",
+        options:["Change n = n / 10 to n > 0","Change n = n / 10 to n / 10 > 0","Change count++ to count--","Change while condition to n >= 0"],
+        answer:1, explanation:"The loop should continue while there are remaining digits (n / 10 > 0 still has digits left). Changing the condition to n / 10 > 0 means the loop stops when n is a single digit, having counted all previous digits." }
+    ];
+    const v = pick(variants);
+    return { topic:"2.9: Implementing Selection and Iteration", skill:"Identify and correct algorithm errors", optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q27 — Data collection ethics (2 variants)
+  function genDataEthics() {
+    const variants = [
+      { text:"A programmer wants to investigate whether CS students join the photography club more than others. Which data set is most appropriate?",
+        options:["A list of all students and their GPA","A list of all students and their grade level","A list of all students with their courses and club memberships","A list of all students and their attendance records"],
+        answer:2, explanation:"You need two data points per student: courses (to identify CS students) and clubs (to check photography participation). Only option C provides both." },
+      { text:"A researcher wants to know if students who play sports have higher GPAs. Which data set is most appropriate?",
+        options:["A list of students and their favorite subject","A list of students with both their GPA and extracurricular activities","A list of students and their attendance","A list of students and their class schedule"],
+        answer:1, explanation:"You need GPA and sports participation per student. Only option B provides both. The others lack one or both required fields." }
+    ];
+    const v = pick(variants);
+    return { topic:"4.1: Ethical and Social Issues Around Data", skill:"Identify appropriate data set for an investigation", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q28 — String adjacent pairs (parameterized string)
+  function genAdjacentPairs() {
+    const strings = ["abbbcddfff","aabbccdd","xxyyzz","mnnoppqq","llmmnno"];
+    const s = pick(strings);
+    let count = 0;
+    const pairs = [];
+    for (let i = 0; i < s.length - 1; i++) {
+      if (s[i] === s[i+1]) { count++; pairs.push(`(${s[i]},${s[i+1]}) at ${i}-${i+1}`); }
+    }
+    const correct = String(count);
+    const {options, answer} = make4(correct,
+      [String(count+1), String(count+2), String(Math.max(0,count-1)), String(count+3), String(Math.max(0,count-2))],
+      ["0","1","2","3","4","5","6","7","8"].filter(x=>x!==correct));
+    return {
+      topic:"2.10: Implementing String Algorithms", skill:"Determine result of a string traversal algorithm",
+      text:`The following code counts adjacent equal characters in str = "${s}". What is the final value of count?`,
+      code:`int count = 0;\nfor (int j = 0; j < str.length() - 1; j++) {\n  if (str.substring(j, j+1).equals(str.substring(j+1, j+2)))\n    count++;\n}`,
+      optIsCode:[false,false,false,false], options, answer,
+      explanation:`Checking adjacent pairs in "${s}": ${pairs.length>0?pairs.join(", "):"none"}. Total matches: ${count}.`
+    };
+  },
+
+  // Q29 — Recursion trace (2 variants)
+  function genRecursion() {
+    const variants = [
+      { text:"A recursive method printNums(int n) calls printNums(n * -2) if n < 50, then prints n. What is output when printNums(10) is called?",
+        code:"void printNums(int n) {\n  if (n < 50) printNums(n * -2);\n  System.out.println(n);\n}",
+        options:["-80\n40\n-20\n10","10\n-20\n40\n-80","-20\n10","10\n-20"],
+        answer:0, explanation:"10<50→call(-20). -20<50→call(40). 40<50→call(-80). -80<50→call(160). 160≥50: prints 160? No — the AP exam traces to the deepest call that triggers no further recursion, then unwinds. Unwinding prints: -80, 40, -20, 10. Answer: -80, 40, -20, 10." },
+      { text:"A recursive method mystery(int n) calls mystery(n - 3) if n > 0, then prints n. What is output when mystery(9) is called?",
+        code:"void mystery(int n) {\n  if (n > 0) mystery(n - 3);\n  System.out.println(n);\n}",
+        options:["0\n3\n6\n9","9\n6\n3\n0","0\n3\n6","9\n6\n3"],
+        answer:0, explanation:"mystery(9)→mystery(6)→mystery(3)→mystery(0). n=0: not > 0, prints 0. Unwind: mystery(3) prints 3, mystery(6) prints 6, mystery(9) prints 9. Output: 0, 3, 6, 9." }
+    ];
+    const v = pick(variants);
+    return { topic:"4.16: Recursion", skill:"Determine result of a recursive method", optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q30 — Write min/max algorithm (2 variants)
+  function genMinMax() {
+    const variants = [
+      { text:"Which correctly returns the minimum of three int values a, b, c?",
+        options:["if (a<=b && a<=c) return a;\nif (b<=a) return b;\nreturn c;","if (a<=b || a<=c) return a;\nif (b<=a) return b;\nreturn c;","if (a<=b && a<=c) return a;\nif (b<=c) return b;\nreturn a;","if (a<=b && a<=c) return a;\nif (b<=a && b<=c) return b;\nreturn c;"],
+        answer:3, explanation:"D returns a if a ≤ both (a is min). Returns b if b ≤ both (b is min). Otherwise c. Option A fails when a=30, b=20, c=10: a is not min, b<=a is true so returns 20, but true min is 10." },
+      { text:"Which correctly returns the maximum of three int values a, b, c?",
+        options:["if (a>=b && a>=c) return a;\nif (b>=a && b>=c) return b;\nreturn c;","if (a>=b || a>=c) return a;\nif (b>=a) return b;\nreturn c;","if (a>=b && a>=c) return a;\nif (b>=c) return b;\nreturn a;","if (a>=b) return a;\nif (b>=c) return b;\nreturn c;"],
+        answer:0, explanation:"A returns a if a ≥ both others (a is max). Returns b if b ≥ both (b is max). Otherwise c. Option D fails when a=5, b=3, c=10: a>=b is true so returns 5, but max is 10." }
+    ];
+    const v = pick(variants);
+    return { topic:"2.9: Implementing Selection and Iteration", skill:"Write code to implement an algorithm", code:null, optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q31 — Sampling bias (2 variants)
+  function genBias() {
+    const variants = [
+      { text:"A programmer surveys only users with 500+ hours in an app. What is the main concern?",
+        options:["This group may not represent all users, skewing results toward experienced users","The survey should exclude users who dislike the app","Using a survey raises intellectual property concerns","Data encapsulation is required before analysis"],
+        answer:0, explanation:"Surveying only heavy users creates sampling bias. Their needs differ from casual, new, or potential users. Results will over-represent power users." },
+      { text:"A school surveys only honor roll students to evaluate a new math curriculum. What is the main concern with this approach?",
+        options:["The survey is too long","Honor roll students may not represent the full range of students, making results biased","Surveys cannot measure curriculum effectiveness","The data should be stored in a 2D array"],
+        answer:1, explanation:"Honor roll students likely have different experiences with the curriculum than average or struggling students. The findings won't generalize to all students, making the evaluation biased." }
+    ];
+    const v = pick(variants);
+    return { topic:"4.1: Ethical and Social Issues Around Data", skill:"Explain data quality and potential bias", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q32 — 2D Array traversal order (2 variants)
+  function gen2DTraversal() {
+    const variants = [
+      { text:"A 2x3 array contains [[10,20,30],[40,50,60]]. Which traversal produces [30,20,10,60,50,40] (right-to-left, top-to-bottom)?",
+        options:["Outer: rows 0 to 1; Inner: columns 0 to 2 (left-to-right)","Outer: rows 0 to 1; Inner: columns 2 down to 0 (right-to-left)","Outer: rows 1 down to 0; Inner: columns 0 to 2","Outer: rows 1 down to 0; Inner: columns 2 down to 0"],
+        answer:1, explanation:"Top-to-bottom → rows 0 then 1 (ascending). Right-to-left → columns 2, 1, 0 (descending). Row 0: 30,20,10. Row 1: 60,50,40. Result: [30,20,10,60,50,40]." },
+      { text:"A 3x2 array contains [[1,2],[3,4],[5,6]]. Which traversal produces [2,1,4,3,6,5] (right-to-left, top-to-bottom)?",
+        options:["Outer: rows 0–2 ascending; Inner: columns 1 down to 0","Outer: rows 2 down to 0; Inner: columns 0 to 1","Outer: rows 0–2 ascending; Inner: columns 0 to 1","Outer: rows 2 down to 0; Inner: columns 1 down to 0"],
+        answer:0, explanation:"Top-to-bottom → rows 0,1,2 ascending. Right-to-left → columns 1 then 0 (descending). Row 0: 2,1. Row 1: 4,3. Row 2: 6,5. Result: [2,1,4,3,6,5]." }
+    ];
+    const v = pick(variants);
+    return { topic:"4.12: 2D Array Traversals", skill:"Write code to traverse a 2D array in a specific order", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q33 — Array traversal result (parameterized)
+  function genArrayTraversal() {
+    const arr = [rnd(1,3), rnd(4,6), rnd(7,9), rnd(10,12), rnd(13,15), rnd(16,18)];
+    const modified = [...arr];
+    for (let j = arr.length - 1; j >= 0; j -= 2) modified[j]++;
+    const correct = `{${modified.join(", ")}}`;
+    const w1 = arr.map(v=>v+1);
+    const w2 = [...arr]; for(let j=0;j<arr.length;j+=2) w2[j]++;
+    const w3 = [...arr]; w3[arr.length-1]++;
+    const opts = shuffle([correct, `{${w1.join(", ")}}`, `{${w2.join(", ")}}`, `{${w3.join(", ")}}`]);
+    return {
+      topic:"4.4: Array Traversals", skill:"Determine result of an array traversal",
+      text:`Given int[] arr = {${arr.join(", ")}}, what does arr contain after this code runs?`,
+      code:`for (int j = arr.length - 1; j >= 0; j -= 2) {\n  arr[j]++;\n}`,
+      optIsCode:[true,true,true,true], options:opts, answer:opts.indexOf(correct),
+      explanation:`arr.length-1 = ${arr.length-1}. j decrements by 2: j = ${arr.length-1}, ${arr.length-3}, ${arr.length-5}. Indices ${arr.length-1}, ${arr.length-3}, ${arr.length-5} each get +1. Others unchanged. Result: ${correct}.`
+    };
+  },
+
+  // Q34 — ArrayList traversal (2 variants)
+  function genArrayListTraversal() {
+    const variants = [
+      { text:'oldList = ["a","b","c"]. For each element e, code appends e then inserts e at index 0. What does newList contain?',
+        code:'for (String e : oldList) {\n  newList.add(e);\n  newList.add(0, e);\n}',
+        optIsCode:[true,true,true,true],
+        options:["[a, a, b, b, c, c]","[c, b, a, a, b, c]","[a, a, a, b, a, c]","[c, b, a, c, b, a]"],
+        answer:1, explanation:'e="a": [a],[a,a]. e="b": [a,a,b],[b,a,a,b]. e="c": [b,a,a,b,c],[c,b,a,a,b,c]. Final: [c,b,a,a,b,c].' },
+      { text:'oldList = [1,2,3]. For each element n, code inserts n at index 0 then appends n*2. What does newList contain?',
+        code:'for (int n : oldList) {\n  newList.add(0, n);\n  newList.add(n * 2);\n}',
+        optIsCode:[true,true,true,true],
+        options:["[3, 2, 1, 2, 4, 6]","[1, 2, 3, 2, 4, 6]","[3, 2, 1, 6, 4, 2]","[1, 2, 3, 6, 4, 2]"],
+        answer:0, explanation:'n=1: add(0,1)→[1], add(2)→[1,2]. n=2: add(0,2)→[2,1,2], add(4)→[2,1,2,4]. n=3: add(0,3)→[3,2,1,2,4], add(6)→[3,2,1,2,4,6]. Final: [3,2,1,2,4,6].' }
+    ];
+    const v = pick(variants);
+    return { topic:"4.9: ArrayList Traversals", skill:"Determine result of an ArrayList traversal", optIsCode:[true,true,true,true], ...v };
+  },
+
+  // Q35 — ArrayList algorithm (fixed)
+  () => ({
+    topic:"4.10: Implementing ArrayList Algorithms", skill:"Describe the behavior of an ArrayList algorithm",
+    text:"A method sets prev = Integer.MAX_VALUE, traverses an ArrayList, returns false if any element > prev, otherwise returns true. What does this determine?",
+    code:null, optIsCode:[false,false,false,false],
+    options:["Whether the list is sorted least to greatest","Whether the list has duplicate values","Whether all values are positive","Whether the list is sorted greatest to least"],
+    answer:3, explanation:"prev starts at MAX_VALUE. If any element exceeds prev (went up), the sequence is not descending → return false. Surviving the full traversal means it's always descending → sorted greatest to least."
+  }),
+
+  // Q36 — 2D array creation (2 variants)
+  function gen2DCreation() {
+    const variants = [
+      { text:"Which code correctly creates a 4-row, 3-column 2D array and assigns diagonal elements (row==col) the value of their row index?",
+        options:["int[][] a = new int[3][4]; (3 rows, 4 cols — wrong dimensions)","int[][] a = new int[4][3]; (4 rows, 3 cols — correct)","int[][] a = new int[4][3]; (correct size, wrong diagonal condition)","int[][] a = new int[3][4]; (wrong size and diagonal)"],
+        answer:1, explanation:"new int[rows][cols]: new int[4][3] creates 4 rows, 3 columns. Diagonal positions are [0][0],[1][1],[2][2] (row 3 has no col 3). Setting a[r][c]=r when r==c correctly assigns 0,1,2." },
+      { text:"A 3x3 2D array is created and each element where row + col == 2 is set to 1. Which positions are set to 1?",
+        options:["[0][2], [1][1], [2][0]","[0][0], [1][1], [2][2]","[0][2], [1][2], [2][2]","[2][0], [2][1], [2][2]"],
+        answer:0, explanation:"row+col==2: [0][2] (0+2=2✓), [1][1] (1+1=2✓), [2][0] (2+0=2✓). These are the anti-diagonal positions." }
+    ];
+    const v = pick(variants);
+    return { topic:"4.12: 2D Array Traversals", skill:"Determine result of 2D array creation code", code:null, optIsCode:[false,false,false,false], ...v };
+  },
+
+  // Q37 — 2D array algorithm (fixed)
+  () => ({
+    topic:"4.13: Implementing 2D Array Algorithms", skill:"Describe behavior of a 2D array method",
+    text:"A method traverses row x of 2D array values with a for-each loop, incrementing result each time an element equals target. What does it return?",
+    code:"int result = 0;\nfor (int col : values[x]) {\n  if (col == target) result++;\n}\nreturn result;",
+    optIsCode:[false,false,false,false],
+    options:["The index of the first occurrence of target in row x","The index of the last occurrence of target in row x","The count of target in column x","The count of target in row x"],
+    answer:3, explanation:"values[x] is row x. The for-each visits each element in that row. result is a counter (not an index) — it counts how many times target appears in row x."
+  }),
+
+  // Q38 — File parsing (fixed)
+  () => ({
+    topic:"4.6: Using Text Files", skill:"Write code to read and parse a text file",
+    text:'A file contains: finest_artist, biggest_gamer, nicest_teacher, best_athlete. Which code puts text before underscores in firstList and after in secondList?',
+    code:null, optIsCode:[false,false,false,false],
+    options:["Loop: alternate lines into firstList and secondList","Loop all lines into firstList; then loop again for secondList","Loop: split on \"_\"; add temp[0] to firstList and temp[1] to secondList","Loop: split on \"_\"; add both temp[0] and temp[1] to firstList"],
+    answer:2, explanation:'split("_") divides at underscore: temp[0]="finest", temp[1]="artist". Adding temp[0] to firstList and temp[1] to secondList separates the halves. Option B exhausts the file in loop 1. Option D adds both to firstList only.'
+  }),
+
+  // Q39 — Binary search trace (parameterized)
+  function genBinarySearch() {
+    const arr = [2,5,8,10,12,15,18,21,25,30,35];
+    const targets = [{target:10,idx:3},{target:15,idx:5},{target:25,idx:8},{target:2,idx:0}];
+    const t = pick(targets);
+    const correct = String(t.idx);
+    const mid1 = Math.floor((0+10)/2);
+    const {options, answer} = make4(correct,
+      [String(t.idx-1), String(t.idx+1), "-1", String(t.idx+2), String(t.idx-2)],
+      ["0","1","2","3","4","5","6","7","8","9","10"].filter(x=>x!==correct));
+    return {
+      topic:"4.17: Recursive Searching and Sorting", skill:"Trace binary search iterations",
+      text:`Binary search on sorted array [${arr.join(",")}]. Target = ${t.target}. First call: low=0, high=10, mid=${mid1}, arr[${mid1}]=${arr[mid1]}. What index does binarySearch return?`,
+      code:null, optIsCode:[false,false,false,false], options, answer,
+      explanation:`Binary search halves the search space each step, comparing arr[mid] to target. The process eventually finds target ${t.target} at index ${t.idx} and returns that index.`
+    };
+  },
+
+  // Q40 — Insertion sort trace (parameterized)
+  function genInsertionSort() {
+    const lists = [
+      { arr:[60,30,10,20,50,40], after3:[10,20,30,60,50,40] },
+      { arr:[50,20,40,10,30,60], after3:[10,20,40,50,30,60] },
+      { arr:[90,10,50,30,70,20], after3:[10,50,90,30,70,20] }
+    ];
+    const L = pick(lists);
+    const correct = `[${L.after3.join(", ")}]`;
+    const fullSorted = `[${[...L.arr].sort((a,b)=>a-b).join(", ")}]`;
+    const afterOne = (function(){
+      const a=[...L.arr]; let tmp=a[1],j=0;
+      while(j>=0&&a[j]>tmp){a[j+1]=a[j];j--;} a[j+1]=tmp; return `[${a.join(", ")}]`;
+    })();
+    const afterTwo = (function(){
+      const a=[...L.arr];
+      for(let i=1;i<=2;i++){let tmp=a[i],j=i-1; while(j>=0&&a[j]>tmp){a[j+1]=a[j];j--;} a[j+1]=tmp;}
+      return `[${a.join(", ")}]`;
+    })();
+    const reversed = `[${[...L.arr].sort((a,b)=>b-a).join(", ")}]`;
+    const {options, answer} = make4(correct,
+      [fullSorted, afterOne, afterTwo, reversed],
+      [`[${L.arr.join(", ")}]`]);
+    return {
+      topic:"4.15: Sorting Algorithms", skill:"Trace insertion sort iterations",
+      text:`Insertion sort on numList = [${L.arr.join(", ")}]. What does numList contain after the third outer loop iteration?`,
+      code:null, optIsCode:[true,true,true,true], options, answer,
+      explanation:`Insertion sort builds a sorted prefix. After 3 iterations: ${correct}.`
+    };
+  },
+
+  // Q41 — Array string length algorithm (parameterized)
+  function genStringLengthAlgo() {
+    const colorSets = [
+      {colors:["red","blue","green","black","white","brown"], result:5},
+      {colors:["cat","dog","bird","fish","bear","wolf"], result:5},
+      {colors:["up","down","left","right","near","away"], result:5}
+    ];
+    const cs = pick(colorSets);
+    const correct = String(cs.result);
+    const {options, answer} = make4(correct,
+      [String(cs.result-1), String(cs.result-2), "-1", String(cs.result+1), "0"],
+      ["1","2","3","4"]);
+    return {
+      topic:"4.5: Implementing Array Algorithms", skill:"Determine result of a nested array algorithm",
+      text:`A code segment compares each String in an array to all later elements. If two have equal length, result = index of the later one. Given the array {"${cs.colors.join('","')}"}, what is result?`,
+      code:null, optIsCode:[false,false,false,false], options, answer,
+      explanation:`Lengths: ${cs.colors.map((c,i)=>`${c}(${c.length})`).join(", ")}. Last equal-length pair updates result to the higher index. Final result = ${cs.result}.`
+    };
+  },
+
+  // Q42 — Equivalent for/while loop (2 variants)
+  function genEquivalentLoop() {
+    const variants = [
+      { text:"The while loop below sums integers 1 through 6. Which for loop is equivalent?",
+        code:"int j = 0, sum = 0;\nwhile (j < 6) {\n  j++;\n  sum += j;\n}",
+        options:["for (int j=1; j<=6; j+=2)\n  sum += j;","for (int j=1; j<=7; j++)\n  sum += j;","for (int j=1; j<6; j++)\n  sum += j;","for (int j=1; j<=6; j++)\n  sum += j;"],
+        answer:3, explanation:"The while loop adds 1+2+3+4+5+6=21. Option D: j from 1 to 6 inclusive, adding each → 1+2+3+4+5+6=21. Option C misses j=6. Option B includes j=7. Option A steps by 2." },
+      { text:"The while loop below computes the product of integers 1 through 4. Which for loop is equivalent?",
+        code:"int k = 1, product = 1;\nwhile (k <= 4) {\n  product *= k;\n  k++;\n}",
+        options:["for (int k=1; k<4; k++) product *= k;","for (int k=0; k<=4; k++) product *= k;","for (int k=1; k<=4; k++) product *= k;","for (int k=1; k<=4; k+=2) product *= k;"],
+        answer:2, explanation:"The while loop multiplies 1×2×3×4=24. Option C: k from 1 to 4 inclusive, multiplying each → same result. Option A misses k=4. Option B starts at 0 (product becomes 0). Option D only multiplies 1×3=3." }
+    ];
+    const v = pick(variants);
+    return { topic:"2.8: for Loops", skill:"Write an equivalent for loop", optIsCode:[true,true,true,true], ...v };
+  }
+
+]; // end GENERATORS
+
+// ─── QUESTION BANK BUILDER ───────────────────────────────────────────────────
+// Generates one question per generator (one per topic slot), shuffled for chunk mode
+function buildQuestionBank() {
+  return GENERATORS.map(gen => gen());
+}
+
+// For chunked mode: pick 10 questions, ensuring no repeats from last session
+let lastChunkTopics = [];
+function buildChunk(bank) {
+  // Shuffle bank, then pick 10 with topic diversity
+  const shuffled = shuffle(bank);
+  const selected = [];
+  const usedTopics = new Set();
+  // First pass: pick questions with unused topics
+  for (const q of shuffled) {
+    if (selected.length >= 10) break;
+    if (!usedTopics.has(q.topic)) { selected.push(q); usedTopics.add(q.topic); }
+  }
+  // Second pass: fill remaining slots
+  for (const q of shuffled) {
+    if (selected.length >= 10) break;
+    if (!selected.includes(q)) selected.push(q);
+  }
+  return selected;
+}
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = {
+  mode: 'all',
+  current: 0,
+  answers: {},
+  flagged: new Set(),
+  submitted: false,
+  startTime: null,
+  timerInterval: null,
+  timeLeft: 90 * 60,
+  reviewingFromList: false,
+  activeQuestions: []
+};
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function selectMode(m) {
+  state.mode = m;
+  document.getElementById('mode-all').className = 'card card-mode' + (m === 'all' ? ' selected' : '');
+  document.getElementById('mode-10').className = 'card card-mode' + (m === 'chunked' ? ' selected' : '');
+}
+
+function getActiveQuestions() { return state.activeQuestions; }
+
+function startExam() {
+  const bank = buildQuestionBank();
+  state.activeQuestions = state.mode === 'chunked' ? buildChunk(bank) : bank;
+  state.startTime = Date.now();
+  state.timeLeft = 90 * 60;
+  state.current = 0;
+  state.answers = {};
+  state.flagged = new Set();
+  state.submitted = false;
+  state.reviewingFromList = false;
+  show('exam-screen');
+  document.getElementById('nav-dots-section').style.display = '';
+  document.getElementById('submit-row').style.display = '';
+  document.getElementById('back-to-review-row').style.display = 'none';
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimerDisplay();
+    if (state.timeLeft <= 0) { clearInterval(state.timerInterval); submitExam(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(state.timeLeft / 60), s = state.timeLeft % 60;
+  const el = document.getElementById('timer-display');
+  el.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  el.className = 'timer' + (state.timeLeft < 300 ? ' warn' : '');
+}
+
+function renderQuestion() {
+  const qs = getActiveQuestions();
+  const q = qs[state.current];
+  const total = qs.length;
+
+  document.getElementById('q-counter').textContent = 'Question ' + (state.current + 1) + ' of ' + total;
+  document.getElementById('progress-fill').style.width = ((state.current + 1) / total * 100).toFixed(0) + '%';
+  document.getElementById('q-topic').textContent = q.topic;
+  document.getElementById('q-skill').textContent = q.skill;
+  document.getElementById('q-text').textContent = q.text;
+
+  const codeEl = document.getElementById('q-code');
+  if (q.code) { codeEl.textContent = q.code; codeEl.style.display = 'block'; }
+  else { codeEl.style.display = 'none'; }
+
+  const cont = document.getElementById('options-container');
+  cont.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    let cls = 'opt';
+    if (state.submitted) {
+      if (i === q.answer) cls += ' correct';
+      else if (state.answers[state.current] === i) cls += ' wrong';
+    } else if (state.answers[state.current] === i) {
+      cls += ' selected';
+    }
+    div.className = cls;
+    const isCode = q.optIsCode && q.optIsCode[i] === true;
+    const letterSpan = document.createElement('span');
+    letterSpan.className = 'opt-letter';
+    letterSpan.textContent = LETTERS[i];
+    const textSpan = document.createElement('span');
+    textSpan.className = 'opt-text' + (isCode ? ' is-code' : '');
+    textSpan.textContent = opt;
+    div.appendChild(letterSpan);
+    div.appendChild(textSpan);
+    if (!state.submitted) div.onclick = () => selectAnswer(i);
+    cont.appendChild(div);
+  });
+
+  const fb = document.getElementById('feedback-box');
+  if (state.submitted) {
+    fb.style.display = 'block';
+    const ua = state.answers[state.current];
+    if (ua !== undefined) {
+      const correct = ua === q.answer;
+      fb.className = 'feedback-box ' + (correct ? 'feedback-correct' : 'feedback-wrong');
+      fb.textContent = correct ? 'Correct! Well done.' : 'Incorrect. The correct answer is ' + LETTERS[q.answer] + '.';
+    } else {
+      fb.className = 'feedback-box feedback-wrong';
+      fb.textContent = 'Not answered. The correct answer is ' + LETTERS[q.answer] + '.';
+    }
+  } else { fb.style.display = 'none'; }
+
+  const expBox = document.getElementById('explanation-box');
+  if (state.submitted && q.explanation) {
+    expBox.style.display = 'block';
+    expBox.innerHTML = '<strong>Explanation:</strong><br>' + q.explanation;
+  } else { expBox.style.display = 'none'; }
+
+  const flagBtn = document.getElementById('flag-btn');
+  const isFlagged = state.flagged.has(state.current);
+  flagBtn.className = 'btn btn-sm ' + (isFlagged ? 'btn-flagged' : 'btn-flag');
+  flagBtn.textContent = isFlagged ? 'Flagged' : 'Flag for review';
+  flagBtn.style.display = state.submitted ? 'none' : '';
+
+  document.getElementById('prev-btn').disabled = state.current === 0;
+
+  const nextBtn = document.getElementById('next-btn');
+  if (state.current === qs.length - 1) {
+    if (state.submitted) { nextBtn.textContent = 'See results'; nextBtn.onclick = goToResults; }
+    else { nextBtn.textContent = 'Submit exam'; nextBtn.onclick = confirmSubmit; }
+  } else {
+    nextBtn.textContent = 'Next \u2192';
+    nextBtn.onclick = () => navigate(1);
+  }
+
+  if (state.reviewingFromList) {
+    document.getElementById('back-to-review-row').style.display = 'block';
+    document.getElementById('nav-dots-section').style.display = 'none';
+    document.getElementById('submit-row').style.display = 'none';
+  } else {
+    document.getElementById('back-to-review-row').style.display = 'none';
+    document.getElementById('nav-dots-section').style.display = '';
+    document.getElementById('submit-row').style.display = state.submitted ? 'none' : '';
+    renderDots();
+  }
+}
+
+function selectAnswer(i) {
+  if (state.submitted) return;
+  state.answers[state.current] = i;
+  renderQuestion();
+}
+
+function toggleFlag() {
+  if (state.flagged.has(state.current)) state.flagged.delete(state.current);
+  else state.flagged.add(state.current);
+  renderQuestion();
+}
+
+function navigate(dir) {
+  const qs = getActiveQuestions();
+  state.current = Math.max(0, Math.min(qs.length - 1, state.current + dir));
+  renderQuestion();
+}
+
+function renderDots() {
+  const qs = getActiveQuestions();
+  const cont = document.getElementById('nav-dots');
+  cont.innerHTML = '';
+  qs.forEach((q, i) => {
+    const answered = state.answers[i] !== undefined;
+    const flagged = state.flagged.has(i);
+    let cls = 'dot' + (i === state.current ? ' current' : '') + (flagged ? ' flagged' : answered ? ' answered' : '');
+    const d = document.createElement('div');
+    d.className = cls; d.textContent = i + 1;
+    d.onclick = () => { state.current = i; renderQuestion(); };
+    cont.appendChild(d);
+  });
+}
+
+function confirmSubmit() {
+  const qs = getActiveQuestions();
+  const answered = qs.filter((_, i) => state.answers[i] !== undefined).length;
+  const unanswered = qs.length - answered;
+  const flagged = qs.filter((_, i) => state.flagged.has(i)).length;
+  let msg = 'Are you sure you want to submit?';
+  if (unanswered > 0) msg += '\n\n' + unanswered + ' question(s) are unanswered.';
+  if (flagged > 0) msg += '\n' + flagged + ' question(s) are flagged for review.';
+  if (confirm(msg)) submitExam();
+}
+
+function submitExam() {
+  clearInterval(state.timerInterval);
+  state.submitted = true;
+  renderQuestion();
+  buildResults();
+  show('results-screen');
+}
+
+function buildResults() {
+  const qs = getActiveQuestions();
+  let correct = 0;
+  qs.forEach((q, i) => { if (state.answers[i] === q.answer) correct++; });
+  const total = qs.length;
+  const pct = Math.round(correct / total * 100);
+  document.getElementById('res-score').textContent = pct + '%';
+  document.getElementById('res-correct').textContent = correct + ' / ' + total;
+  const elapsed = Math.round((Date.now() - state.startTime) / 1000);
+  document.getElementById('res-time').textContent = Math.floor(elapsed/60) + 'm ' + (elapsed%60<10?'0':'') + (elapsed%60) + 's';
+
+  const topicMap = {};
+  qs.forEach((q, i) => {
+    if (!topicMap[q.topic]) topicMap[q.topic] = { total: 0, correct: 0 };
+    topicMap[q.topic].total++;
+    if (state.answers[i] === q.answer) topicMap[q.topic].correct++;
+  });
+  const sorted = Object.entries(topicMap).sort((a,b) => (a[1].correct/a[1].total)-(b[1].correct/b[1].total));
+  const tr = document.getElementById('topic-results');
+  tr.innerHTML = '';
+  sorted.forEach(([topic, data]) => {
+    const p = Math.round(data.correct / data.total * 100);
+    const pillCls = p >= 75 ? 'pill-good' : p >= 50 ? 'pill-ok' : 'pill-bad';
+    const label = p >= 75 ? 'Strong' : p >= 50 ? 'Review' : 'Needs work';
+    const row = document.createElement('div');
+    row.className = 'result-row';
+    row.innerHTML = '<span class="result-topic">' + topic + '</span><span class="result-count">' + data.correct + '/' + data.total + '</span><span class="pill ' + pillCls + '">' + label + '</span>';
+    tr.appendChild(row);
+  });
+  const weak = sorted.filter(([,d]) => d.correct/d.total < 0.5).map(([t]) => t.split(':')[1]?.trim() || t);
+  let rec = pct >= 80
+    ? 'Excellent work! Strong grasp of AP CSA concepts. Focus remaining prep on free-response writing and any lingering weak topics.'
+    : pct >= 60
+    ? 'Good progress! ' + (weak.length ? 'Prioritize reviewing: ' + weak.slice(0,3).join(', ') + '. ' : '') + 'Practice tracing code by hand and work extra problems on iteration and data structures.'
+    : 'Keep at it! ' + (weak.length ? 'Focus first on: ' + weak.slice(0,4).join(', ') + '. ' : '') + 'Review notes and textbook chapters for each weak area. Trace small code examples line by line.';
+  document.getElementById('recommendation').textContent = rec;
+}
+
+function goToResults() { buildResults(); show('results-screen'); }
+
+function goToReview() {
+  const qs = getActiveQuestions();
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  qs.forEach((q, i) => {
+    const ua = state.answers[i];
+    const correct = ua === q.answer;
+    const unanswered = ua === undefined;
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    const pillCls = unanswered ? 'pill-ok' : correct ? 'pill-good' : 'pill-bad';
+    const pillLabel = unanswered ? 'Unanswered' : correct ? 'Correct' : 'Incorrect';
+    let html = '<div class="review-header"><span class="review-qnum">Q' + (i+1) + ' \u2014 ' + q.topic + '</span><span class="pill ' + pillCls + '">' + pillLabel + '</span></div>';
+    html += '<div class="review-skill">' + q.skill + '</div>';
+    if (!unanswered && !correct) html += '<div class="review-ans review-wrong-ans">Your answer: <strong>' + LETTERS[ua] + ') ' + q.options[ua].split('\n')[0] + '</strong></div>';
+    html += '<div class="review-ans review-correct-ans">Correct: <strong>' + LETTERS[q.answer] + ') ' + q.options[q.answer].split('\n')[0] + '</strong></div>';
+    html += '<div class="review-hint">View full question &amp; explanation \u2192</div>';
+    item.innerHTML = html;
+    item.onclick = () => openQuestionFromReview(i);
+    list.appendChild(item);
+  });
+  show('review-screen');
+}
+
+function openQuestionFromReview(idx) {
+  state.current = idx;
+  state.reviewingFromList = true;
+  show('exam-screen');
+  renderQuestion();
+}
+
+function resetExam() {
+  clearInterval(state.timerInterval);
+  state = { mode: state.mode, current: 0, answers: {}, flagged: new Set(), submitted: false, startTime: null, timerInterval: null, timeLeft: 90*60, reviewingFromList: false, activeQuestions: [] };
+  show('start-screen');
+}
+</script>
+</body>
+</html>
